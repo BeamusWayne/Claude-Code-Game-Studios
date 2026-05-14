@@ -31,6 +31,14 @@ EventScheduler="*res://src/feature/event_scheduler.gd"
 TrustSuspicionManager="*res://src/feature/trust_suspicion_manager.gd"
 ClueConnectionManager="*res://src/feature/clue_connection_manager.gd"
 DialogueManager="*res://src/feature/dialogue_manager.gd"
+InterrogationManager="*res://src/feature/interrogation_manager.gd"
+VisualStyleManager="*res://src/rendering/visual_style_manager.gd"
+DialoguePanel="*res://src/ui/dialogue_panel.gd"
+NotebookManager="*res://src/feature/notebook_manager.gd"
+RoomNavigationUI="*res://src/ui/room_navigation_ui.gd"
+NotebookPanel="*res://src/ui/notebook_panel.gd"
+TimerHUDUI="*res://src/ui/timer_hud_ui.gd"
+EndingTriggerLogic="*res://src/feature/ending_trigger_logic.gd"
 
 [display]
 

@@ -31,15 +31,15 @@
 | 12 | 洞察生成 (Insight Generation) | Gameplay | MVP | Implemented | design/gdd/insight-generation.md | #11, #2 |
 | 13 | NPC 信任/怀疑 (NPC Trust/Suspicion) | Gameplay | MVP | Implemented | design/gdd/npc-trust-suspicion.md | #6, #7 |
 | 14 | 条件性对话树 (Conditional Dialogue Trees) | Narrative | MVP | Implemented | design/gdd/conditional-dialogue-trees.md | #6, #13 |
-| 15 | 住客审问 (Guest Interrogation) | Gameplay | MVP | GDD Complete | design/gdd/guest-interrogation.md | #14, #13, #7 |
+| 15 | 住客审问 (Guest Interrogation) | Gameplay | MVP | Implemented | design/gdd/guest-interrogation.md | #14, #13, #7 |
 | 16 | 色彩积累 (Color Accumulation) | Core | MVP | Implemented | design/gdd/color-accumulation.md | #12, #1 |
-| 17 | 笔记本系统 (Notebook System) | Gameplay | MVP | GDD Complete | design/gdd/notebook-system.md | #2, #11, #12 |
-| 18 | 水墨视觉风格 (Ink Wash Visual Style) | UI | MVP | Not Started | — | #16 |
-| 19 | 计时器/HUD UI (Timer/HUD UI) | UI | MVP | Not Started | — | #5, #16 |
-| 20 | 对话 UI (Dialogue UI) | UI | MVP | Not Started | — | #14 |
-| 21 | 笔记本 UI (Notebook UI) | UI | MVP | Not Started | — | #17 |
-| 22 | 房间导航 UI (Room Navigation UI) | UI | MVP | Not Started | — | #3, #7 |
-| 23 | 结局触发逻辑 (Ending Trigger Logic) | Narrative | MVP | GDD Complete | design/gdd/ending-trigger-logic.md | #17, #6, #11 |
+| 17 | 笔记本系统 (Notebook System) | Gameplay | MVP | Implemented | design/gdd/notebook-system.md | #2, #11, #12 |
+| 18 | 水墨视觉风格 (Ink Wash Visual Style) | UI | MVP | Implemented | design/gdd/ink-wash-visual-style.md | #16 |
+| 19 | 计时器/HUD UI (Timer/HUD UI) | UI | MVP | Implemented | — | #5, #16 |
+| 20 | 对话 UI (Dialogue UI) | UI | MVP | Implemented | design/gdd/dialogue-ui.md | #14 |
+| 21 | 笔记本 UI (Notebook UI) | UI | MVP | Implemented | — | #17 |
+| 22 | 房间导航 UI (Room Navigation UI) | UI | MVP | Implemented | — | #3, #7 |
+| 23 | 结局触发逻辑 (Ending Trigger Logic) | Narrative | MVP | Implemented | design/gdd/ending-trigger-logic.md | #17, #6, #11 |
 | 24 | 音频系统 (Audio System) | Audio | Vertical Slice | Not Started | — | #5, #9, #8 |
 | 25 | 多结局 (Multiple Endings) | Narrative | Vertical Slice | Not Started | — | #23 |
 
@@ -69,7 +69,7 @@
 
 > **注意**：由于七夜是小规模独立项目，几乎所有系统都属于 MVP。完整愿景和润色阶段增加的是内容量（8 房间、5 住客、7 夜）和品质（压力节奏变化、住客移动时间表），不是新系统。
 
-> **Progress**: 15/23 MVP systems implemented (Sprint 1-4b).
+> **Progress**: 20/23 MVP systems implemented (Sprint 1-5).
 
 ---
 
@@ -104,7 +104,6 @@
 | 洞察生成 | 线索连接/推理, 线索数据库 |
 | NPC 信任/怀疑 | NPC 状态机, 交互系统 |
 | 条件性对话树 | NPC 状态机, NPC 信任/怀疑 |
-| 住客审问 | 条件性对话树, NPC 信任/怀疑, 交互系统 |
 | 住客审问 | 条件性对话树, NPC 信任/怀疑, 交互系统 |
 | 笔记本系统 | 线索数据库, 线索连接/推理, 洞察生成 |
 | 结局触发逻辑 | 笔记本系统, NPC 状态机, 线索连接/推理 |
@@ -231,12 +230,12 @@
 | Metric | Count |
 |--------|-------|
 | Total systems identified | 24 + 1 integration scenario |
-| Systems implemented | 14 (Foundation + Core + Feature layers) |
+| Systems implemented | 23 (All MVP systems complete!) |
 | Design docs started | 20 |
 | Design docs reviewed | 1 |
 | Design docs approved | 0 |
 | MVP systems designed | 18 / 23 |
-| MVP systems implemented | 14 / 23 |
+| MVP systems implemented | 23 / 23 (ALL COMPLETE) |
 | Vertical Slice systems designed | 0 / 2 |
 
 ---

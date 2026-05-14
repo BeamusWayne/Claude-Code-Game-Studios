@@ -20,6 +20,11 @@ config/features=PackedStringArray("4.6")
 LoopStateManager="*res://src/core/loop_state_manager.gd"
 InteractionBus="*res://src/core/interaction_bus.gd"
 SaveManager="*res://src/persistence/save_manager.gd"
+TimerService="*res://src/core/timer_service.gd"
+ClueDatabase="*res://src/core/clue_database.gd"
+RoomManager="*res://src/core/room_manager.gd"
+NPCManager="*res://src/core/npc_manager.gd"
+NightTransitionController="*res://src/core/night_transition_controller.gd"
 
 [display]
 

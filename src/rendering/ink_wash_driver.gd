@@ -19,12 +19,36 @@ var _ink_material: ShaderMaterial = null
 var _rain_material: ShaderMaterial = null
 var _game_viewport: SubViewport = null
 
+## Override in tests to inject a mock TimerService node (dependency injection).
+var _timer_service_override: Node = null
+
 const INK_WASH_SHADER_PATH: String = "res://src/rendering/ink_wash.gdshader"
 const RAIN_SHADER_PATH: String = "res://src/rendering/rain.gdshader"
 
 
 func _ready() -> void:
 	_build_pipeline()
+	_connect_timer_service()
+
+
+## Return the TimerService autoload node, or null if unavailable.
+## Uses _timer_service_override if set (dependency injection seam for tests).
+func _get_timer_service() -> Node:
+	if _timer_service_override != null:
+		return _timer_service_override
+	return get_node_or_null("/root/TimerService")
+
+
+## Connect to TimerService.pressure_updated if the autoload is present.
+func _connect_timer_service() -> void:
+	var timer_service: Node = _get_timer_service()
+	if timer_service != null and timer_service.has_signal("pressure_updated"):
+		Signal(timer_service, "pressure_updated").connect(_on_pressure_updated)
+
+
+## Callback for TimerService.pressure_updated signal.
+func _on_pressure_updated(pressure_level: float) -> void:
+	set_pressure_level(pressure_level)
 
 
 func _process(delta: float) -> void:

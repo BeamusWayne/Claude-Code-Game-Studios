@@ -49,7 +49,7 @@ stories:
     name: "TimerService + InkWashDriver integration"
     file: "production/sprints/sprint-002.md"
     priority: should-have
-    status: pending
-    owner: ""
+    status: done
+    owner: "godot-gdscript-specialist"
     estimate_days: 0.5
     blocker: "2-1"

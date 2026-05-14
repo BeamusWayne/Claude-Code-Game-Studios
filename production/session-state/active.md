@@ -1,9 +1,12 @@
 # Active Session State
 
 ## Current Task
-**ALL 23/23 MVP SYSTEMS COMPLETE.** Sprint 5i: #19 Timer/HUD UI + #23 Ending Trigger Logic implemented via parallel agents.
+**ALL 23/23 MVP SYSTEMS COMPLETE.** Writing standalone UI GDDs for systems #19, #21, #22.
 
-## Files Created This Session
+## Files Created This Session (GDD session)
+- `design/gdd/timer-hud-ui.md` -- System #19 Timer/HUD UI standalone GDD
+- `design/gdd/notebook-ui.md` -- System #21 Notebook UI standalone GDD
+- `design/gdd/room-navigation-ui.md` -- System #22 Room Navigation UI standalone GDD
 - `src/ui/timer_hud_ui.gd` — TimerHUDUI CanvasLayer 10 (time display, pressure bar, phase indicator, knowledge tint)
 - `tests/unit/ui/timer_hud_ui_test.gd` — 51 tests covering time formatting, pressure bar, phase colors, knowledge blend, visibility
 - `src/feature/ending_trigger_logic.gd` — EndingTriggerLogic autoload (trigger conditions, blocking, pending, ending sequence state machine)

@@ -35,10 +35,10 @@
 | 16 | 色彩积累 (Color Accumulation) | Core | MVP | Implemented | design/gdd/color-accumulation.md | #12, #1 |
 | 17 | 笔记本系统 (Notebook System) | Gameplay | MVP | Implemented | design/gdd/notebook-system.md | #2, #11, #12 |
 | 18 | 水墨视觉风格 (Ink Wash Visual Style) | UI | MVP | Implemented | design/gdd/ink-wash-visual-style.md | #16 |
-| 19 | 计时器/HUD UI (Timer/HUD UI) | UI | MVP | Implemented | — | #5, #16 |
+| 19 | 计时器/HUD UI (Timer/HUD UI) | UI | MVP | Implemented | design/gdd/timer-hud-ui.md | #5, #16 |
 | 20 | 对话 UI (Dialogue UI) | UI | MVP | Implemented | design/gdd/dialogue-ui.md | #14 |
-| 21 | 笔记本 UI (Notebook UI) | UI | MVP | Implemented | — | #17 |
-| 22 | 房间导航 UI (Room Navigation UI) | UI | MVP | Implemented | — | #3, #7 |
+| 21 | 笔记本 UI (Notebook UI) | UI | MVP | Implemented | design/gdd/notebook-ui.md | #17 |
+| 22 | 房间导航 UI (Room Navigation UI) | UI | MVP | Implemented | design/gdd/room-navigation-ui.md | #3, #7 |
 | 23 | 结局触发逻辑 (Ending Trigger Logic) | Narrative | MVP | Implemented | design/gdd/ending-trigger-logic.md | #17, #6, #11 |
 | 24 | 音频系统 (Audio System) | Audio | Vertical Slice | Not Started | — | #5, #9, #8 |
 | 25 | 多结局 (Multiple Endings) | Narrative | Vertical Slice | Not Started | — | #23 |
@@ -231,7 +231,7 @@
 |--------|-------|
 | Total systems identified | 24 + 1 integration scenario |
 | Systems implemented | 23 (All MVP systems complete!) |
-| Design docs started | 20 |
+| Design docs started | 23 |
 | Design docs reviewed | 1 |
 | Design docs approved | 0 |
 | MVP systems designed | 18 / 23 |

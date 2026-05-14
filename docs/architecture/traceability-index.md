@@ -1,15 +1,15 @@
 # Architecture Traceability Index
 
-Last Updated: 2026-05-14
+Last Updated: 2026-05-15
 Engine: Godot 4.6
-Review: Second (13 ADRs, 5 GDDs)
+Review: Third (14 ADRs, 21 GDDs)
 
 ## Coverage Summary
 
-- Total requirements: 38
-- Covered: 37 (97.4%)
-- Partial: 1 (2.6%)
-- Gaps: 0
+- Total requirements: ~137
+- Covered: ~108 (78.8%)
+- Partial: ~9 (6.6%)
+- Gaps: ~20 (14.6%)
 
 ## Full Matrix
 
@@ -54,24 +54,54 @@ Review: Second (13 ADRs, 5 GDDs)
 | TR-room-009 | room-location.md | Performance | Memory footprint and transition time budget formulas (F1-F4) | ADR-0007 | Covered |
 | TR-room-010 | room-location.md | Core | Scene structure validation (4 required child groups) on LOAD | ADR-0007 | Covered |
 
-## Remaining Partial Coverage
+## New Systems (Review #3 — 16 additional GDDs)
 
-1. **TR-concept-010**: Cross-platform -- ADRs cover input and UI; no platform/export strategy ADR. LOW priority.
+### Systems with ADR Coverage
 
-## Known Conflicts (non-blocking)
+| System | GDD | ADR | Status |
+|--------|-----|-----|--------|
+| Countdown Timer (#5) | countdown-timer.md | ADR-0008 | Covered |
+| NPC State Machine (#6) | npc-state-machine.md | ADR-0009 | Partial (enum mismatch) |
+| Interaction System (#7) | interaction-system.md | ADR-0006 | Covered |
+| Night Transition (#8) | night-transition-controller.md | ADR-0011 | Covered |
+| Event Scheduler (#9) | event-scheduler.md | ADR-0014 | Covered (Proposed) |
+| Color Accumulation (#16) | color-accumulation.md | ADR-0002 | Covered |
+| NPC Trust/Suspicion (#13) | npc-trust-suspicion.md | ADR-0012 | Covered |
+| Conditional Dialogue (#14) | conditional-dialogue-trees.md | ADR-0013 | Covered |
 
-1. **ADR-0006 vs ADR-0007**: Interactable registration ownership -- resolve in Interaction System GDD (#7)
+### Systems with Partial/No ADR Coverage
 
-## Engine Specialist Findings
+| System | GDD | Status |
+|--------|-----|--------|
+| Clue Discovery (#10) | clue-discovery.md | Partial (data schema only) |
+| Clue Connection (#11) | clue-connection-deduction.md | Partial (schema only) |
+| Insight Generation (#12) | insight-generation.md | Covered |
+| Guest Interrogation (#15) | guest-interrogation.md | Gap |
+| Notebook System (#17) | notebook-system.md | Gap |
+| Ending Trigger (#23) | ending-trigger-logic.md | Gap |
+| Ink Wash Visual (#18) | ink-wash-visual-style.md | Gap (shader covered, state machine not) |
+| Dialogue UI (#20) | dialogue-ui.md | Partial (CanvasLayer only) |
 
-| Priority | Issue | ADR | Action |
-|----------|-------|-----|--------|
-| Medium | duplicate_deep() on Dictionary vs Resource | ADR-0004 | Clarify during implementation |
-| Medium | TrustManager lookup fragile, not cached | ADR-0013 | Cache on first lookup |
-| Medium | No autoload registration order manifest | All | Create centralized document |
-| Low-Medium | Touch input propagation depends on Project Settings | ADR-0006 | Document required settings |
-| Low | Typewriter Tween O(n) steps | ADR-0013 | Optimize for mobile |
-| Low | find_children scans entire subtree | ADR-0007 | Use container children directly |
+## Known Conflicts
+
+1. **NPC enum mismatch**: GDD vs ADR-0009 — HIGH
+2. **BASE_DURATION**: loop-state=300s vs timer=180s — MEDIUM
+3. **ADR-0014 interfaces**: Undefined methods — MEDIUM
+4. **ADR-0014 Proposed**: Not Accepted — MEDIUM
+5. **Interactable registration**: ADR-0006 vs ADR-0007 (carried over) — MEDIUM
+
+## Engine Specialist Findings (Review #3)
+
+| Priority | Issue | Action |
+|----------|-------|--------|
+| HIGH | DialoguePanel @onready dead code | Remove |
+| HIGH | Typewriter Tween O(n) | Refactor |
+| HIGH | find_children wildcard | Filter |
+| MEDIUM | Immutability in register_consequence | Fix |
+| MEDIUM | InteractionBus idle process | Guard |
+| MEDIUM | VisualParams mutation | Fix |
+| LOW | Hardcoded configs | Extract |
+| LOW | 18 autoloads order | Document |
 
 ## Superseded Requirements
 
@@ -81,5 +111,6 @@ None.
 
 | Date | Review # | ADRs | GDDs | Total | Covered | Partial | Gaps | Verdict |
 |------|----------|------|------|-------|---------|---------|------|---------|
-| 2026-05-14 (first) | 1 | 7 | 4 | 28 | 23 (82%) | 4 (14%) | 1 (4%) | CONCERNS |
-| 2026-05-14 (second) | 2 | 13 | 5 | 38 | 37 (97%) | 1 (3%) | 0 | PASS |
+| 2026-05-14 | 1 | 7 | 4 | 28 | 23 (82%) | 4 (14%) | 1 (4%) | CONCERNS |
+| 2026-05-14 | 2 | 13 | 5 | 38 | 37 (97%) | 1 (3%) | 0 | PASS |
+| 2026-05-15 | 3 | 14 | 21 | ~137 | ~108 (79%) | ~9 (7%) | ~20 (14%) | CONCERNS |

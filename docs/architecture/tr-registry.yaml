@@ -24,8 +24,8 @@
 #
 # STATUS VALUES: active | deprecated | superseded-by: TR-[system]-NNN
 
-version: 3
-last_updated: "2026-05-14"
+version: 4
+last_updated: "2026-05-15"
 
 requirements:
   # --- GAME CONCEPT (cross-cutting) ---
@@ -333,5 +333,324 @@ requirements:
     gdd: design/gdd/room-location-management.md
     requirement: "Scene structure validation (4 required child groups: Background, Interactables, NPCs, Exits) on LOAD step"
     created: "2026-05-14"
+    revised: ""
+    status: active
+
+  # --- COUNTDOWN TIMER ---
+  - id: TR-timer-001
+    system: countdown-timer
+    gdd: design/gdd/countdown-timer.md
+    requirement: "TimerService Autoload with pressure curve via Godot Curve Resource"
+    created: "2026-05-15"
+    revised: ""
+    status: active
+
+  - id: TR-timer-002
+    system: countdown-timer
+    gdd: design/gdd/countdown-timer.md
+    requirement: "Three pressure phases (CALM 0-0.3, INTENSE 0.3-0.7, CRITICAL 0.7-1.0) with phase_changed signal"
+    created: "2026-05-15"
+    revised: ""
+    status: active
+
+  - id: TR-timer-003
+    system: countdown-timer
+    gdd: design/gdd/countdown-timer.md
+    requirement: "Variable time_scale (Normal=1.0, Dialogue=0.5, Pause/Menu=0.0)"
+    created: "2026-05-15"
+    revised: ""
+    status: active
+
+  - id: TR-timer-004
+    system: countdown-timer
+    gdd: design/gdd/countdown-timer.md
+    requirement: "Per-night configurable duration via NightSchedule Resource"
+    created: "2026-05-15"
+    revised: ""
+    status: active
+
+  - id: TR-timer-005
+    system: countdown-timer
+    gdd: design/gdd/countdown-timer.md
+    requirement: "Serialization of remaining_time and pressure_level for mid-night save"
+    created: "2026-05-15"
+    revised: ""
+    status: active
+
+  # --- NPC STATE MACHINE ---
+  - id: TR-npc-001
+    system: npc-state-machine
+    gdd: design/gdd/npc-state-machine.md
+    requirement: "Enum FSM with 6 emotional states per NPC with validated transition table"
+    created: "2026-05-15"
+    revised: ""
+    status: active
+
+  - id: TR-npc-002
+    system: npc-state-machine
+    gdd: design/gdd/npc-state-machine.md
+    requirement: "NPCManager Autoload with unified registration, query, and propose_delta integration"
+    created: "2026-05-15"
+    revised: ""
+    status: active
+
+  - id: TR-npc-003
+    system: npc-state-machine
+    gdd: design/gdd/npc-state-machine.md
+    requirement: "Template vs persistent state split (template resets nightly, persistent cross-loop)"
+    created: "2026-05-15"
+    revised: ""
+    status: active
+
+  - id: TR-npc-004
+    system: npc-state-machine
+    gdd: design/gdd/npc-state-machine.md
+    requirement: "NPCTemplate Resource per NPC per night for initial state configuration"
+    created: "2026-05-15"
+    revised: ""
+    status: active
+
+  # --- INTERACTION SYSTEM ---
+  - id: TR-interact-001
+    system: interaction-system
+    gdd: design/gdd/interaction-system.md
+    requirement: "InteractionBus Autoload as central event bus with frame-buffered dispatch"
+    created: "2026-05-15"
+    revised: ""
+    status: active
+
+  - id: TR-interact-002
+    system: interaction-system
+    gdd: design/gdd/interaction-system.md
+    requirement: "Interactable component attached to Area2D with priority resolution and group management"
+    created: "2026-05-15"
+    revised: ""
+    status: active
+
+  - id: TR-interact-003
+    system: interaction-system
+    gdd: design/gdd/interaction-system.md
+    requirement: "Auto lifecycle: register on _enter_tree, unregister on _exit_tree, max one event per frame"
+    created: "2026-05-15"
+    revised: ""
+    status: active
+
+  # --- NIGHT TRANSITION CONTROLLER ---
+  - id: TR-night-001
+    system: night-transition
+    gdd: design/gdd/night-transition-controller.md
+    requirement: "8-phase transition sequence (SAVE->STOP_TIMER->FADE_OUT->ADVANCE_NIGHT->REINIT->FADE_IN->START_TIMER->COMPLETE)"
+    created: "2026-05-15"
+    revised: ""
+    status: active
+
+  - id: TR-night-002
+    system: night-transition
+    gdd: design/gdd/night-transition-controller.md
+    requirement: "Blocking conditions (dialogue active, room transitioning, Night 7) with pending flag system"
+    created: "2026-05-15"
+    revised: ""
+    status: active
+
+  - id: TR-night-003
+    system: night-transition
+    gdd: design/gdd/night-transition-controller.md
+    requirement: "Failover strategy: SAVE failure non-blocking, ADVANCE_NIGHT abort+fade back, REINIT logged"
+    created: "2026-05-15"
+    revised: ""
+    status: active
+
+  - id: TR-night-004
+    system: night-transition
+    gdd: design/gdd/night-transition-controller.md
+    requirement: "Night 7 special case: game_ending_triggered signal instead of normal advance"
+    created: "2026-05-15"
+    revised: ""
+    status: active
+
+  # --- EVENT SCHEDULER ---
+  - id: TR-event-001
+    system: event-scheduler
+    gdd: design/gdd/event-scheduler.md
+    requirement: "EventScheduler Autoload with data-driven ScriptedEvent Resources loaded per-night from .tres"
+    created: "2026-05-15"
+    revised: ""
+    status: active
+
+  - id: TR-event-002
+    system: event-scheduler
+    gdd: design/gdd/event-scheduler.md
+    requirement: "Three trigger types (TIME/CONDITION/COMPOUND) and four action types (move_npc/start_dialogue/change_room_state/emit_custom_signal)"
+    created: "2026-05-15"
+    revised: ""
+    status: active
+
+  - id: TR-event-003
+    system: event-scheduler
+    gdd: design/gdd/event-scheduler.md
+    requirement: "Events fire at most once per night, per-frame cap (MAX_EVENTS_PER_FRAME=5), signal-driven CONDITION evaluation"
+    created: "2026-05-15"
+    revised: ""
+    status: active
+
+  # --- CLUE DISCOVERY ---
+  - id: TR-discovery-001
+    system: clue-discovery
+    gdd: design/gdd/clue-discovery.md
+    requirement: "ClueDiscoveryManager with ClueDefinition Resource and discovery conditions (AND logic)"
+    created: "2026-05-15"
+    revised: ""
+    status: active
+
+  - id: TR-discovery-002
+    system: clue-discovery
+    gdd: design/gdd/clue-discovery.md
+    requirement: "Event-driven discovery: InteractionBus interaction -> clue_discovered signal"
+    created: "2026-05-15"
+    revised: ""
+    status: active
+
+  # --- CLUE CONNECTION / DEDUCTION ---
+  - id: TR-conn-001
+    system: clue-connection
+    gdd: design/gdd/clue-connection-deduction.md
+    requirement: "ConnectionDefinition resource with symmetric lookup (min+max key) and atomic connect_clues()"
+    created: "2026-05-15"
+    revised: ""
+    status: active
+
+  - id: TR-conn-002
+    system: clue-connection
+    gdd: design/gdd/clue-connection-deduction.md
+    requirement: "InsightGenerator as RefCounted utility (not Node, stateless, no signals)"
+    created: "2026-05-15"
+    revised: ""
+    status: active
+
+  # --- COLOR ACCUMULATION ---
+  - id: TR-color-001
+    system: color-accumulation
+    gdd: design/gdd/color-accumulation.md
+    requirement: "Derived view architecture: knowledge_level and npc_saturations recalculated from underlying data"
+    created: "2026-05-15"
+    revised: ""
+    status: active
+
+  - id: TR-color-002
+    system: color-accumulation
+    gdd: design/gdd/color-accumulation.md
+    requirement: "Knowledge level, per-NPC saturation, connection intensity, and pressure penalty formulas"
+    created: "2026-05-15"
+    revised: ""
+    status: active
+
+  # --- NPC TRUST / SUSPICION ---
+  - id: TR-trust-001
+    system: npc-trust-suspicion
+    gdd: design/gdd/npc-trust-suspicion.md
+    requirement: "Dual-axis model (independent trust 0-100 and suspicion 0-100) with TrustConfig Resources"
+    created: "2026-05-15"
+    revised: ""
+    status: active
+
+  - id: TR-trust-002
+    system: npc-trust-suspicion
+    gdd: design/gdd/npc-trust-suspicion.md
+    requirement: "Threshold crossing signals, night decay, and dialogue gating rules"
+    created: "2026-05-15"
+    revised: ""
+    status: active
+
+  # --- CONDITIONAL DIALOGUE TREES ---
+  - id: TR-dialogue-001
+    system: conditional-dialogue
+    gdd: design/gdd/conditional-dialogue-trees.md
+    requirement: "DialogueManager Autoload with DialogueTree Resources, 8 condition types, 6 consequence types"
+    created: "2026-05-15"
+    revised: ""
+    status: active
+
+  - id: TR-dialogue-002
+    system: conditional-dialogue
+    gdd: design/gdd/conditional-dialogue-trees.md
+    requirement: "Graceful degradation per upstream system, timer slowdown to 0.5x, no persistent state"
+    created: "2026-05-15"
+    revised: ""
+    status: active
+
+  # --- GUEST INTERROGATION ---
+  - id: TR-interrog-001
+    system: guest-interrogation
+    gdd: design/gdd/guest-interrogation.md
+    requirement: "InterrogationManager Autoload with pressure overlay on dialogue system"
+    created: "2026-05-15"
+    revised: ""
+    status: active
+
+  - id: TR-interrog-002
+    system: guest-interrogation
+    gdd: design/gdd/guest-interrogation.md
+    requirement: "6 option types with pressure/trust/suspicion multipliers and 3 end states (Breakdown/Angry Exit/Voluntary End)"
+    created: "2026-05-15"
+    revised: ""
+    status: active
+
+  # --- NOTEBOOK SYSTEM ---
+  - id: TR-notebook-001
+    system: notebook-system
+    gdd: design/gdd/notebook-system.md
+    requirement: "NotebookManager Autoload as read-only view over ClueDatabase with 3 view modes"
+    created: "2026-05-15"
+    revised: ""
+    status: active
+
+  - id: TR-notebook-002
+    system: notebook-system
+    gdd: design/gdd/notebook-system.md
+    requirement: "Full pause (time_scale=0.0) when notebook open, InteractionBus disabled"
+    created: "2026-05-15"
+    revised: ""
+    status: active
+
+  # --- ENDING TRIGGER LOGIC ---
+  - id: TR-ending-001
+    system: ending-trigger
+    gdd: design/gdd/ending-trigger-logic.md
+    requirement: "EndingManager Autoload, purely event-driven with 3 trigger conditions and one-shot semantics"
+    created: "2026-05-15"
+    revised: ""
+    status: active
+
+  - id: TR-ending-002
+    system: ending-trigger
+    gdd: design/gdd/ending-trigger-logic.md
+    requirement: "Trigger timing constraints (blocked during dialogue/notebook/interrogation/transition/CRITICAL)"
+    created: "2026-05-15"
+    revised: ""
+    status: active
+
+  # --- INK WASH VISUAL STYLE ---
+  - id: TR-visual-001
+    system: ink-wash-visual
+    gdd: design/gdd/ink-wash-visual-style.md
+    requirement: "VisualStyleManager scene-level orchestrator with 7 visual states and priority ordering"
+    created: "2026-05-15"
+    revised: ""
+    status: active
+
+  - id: TR-visual-002
+    system: ink-wash-visual
+    gdd: design/gdd/ink-wash-visual-style.md
+    requirement: "VisualParams data structure, 8 room visual configs, discovery animation, night transition visual sequence"
+    created: "2026-05-15"
+    revised: ""
+    status: active
+
+  # --- DIALOGUE UI ---
+  - id: TR-dui-001
+    system: dialogue-ui
+    gdd: design/gdd/dialogue-ui.md
+    requirement: "DialoguePanel on CanvasLayer 40 with typewriter effect, stamp/seal buttons, mobile adaptation"
+    created: "2026-05-15"
     revised: ""
     status: active

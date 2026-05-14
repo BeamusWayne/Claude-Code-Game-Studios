@@ -36,7 +36,7 @@ Accepted
 
 ### Current State
 
-NPCManager（ADR-0009）定义了 6 种情绪状态（NEUTRAL, FRIENDLY, SUSPICIOUS, HOSTILE, SECRETIVE, REVEALING），但情绪状态和信任/警觉是独立的概念。情绪是 NPC 当前的心情，信任/警觉是跨循环积累的长期关系值。ADR-0009 明确将信任/警觉排除在其范围之外，留给本 ADR。
+NPCManager（ADR-0009）定义了 6 种情绪状态（NEUTRAL, CURIOUS, ANXIOUS, HOSTILE, TRUSTING, FRIGHTENED），但情绪状态和信任/警觉是独立的概念。情绪是 NPC 当前的心情，信任/警觉是跨循环积累的长期关系值。ADR-0009 明确将信任/警觉排除在其范围之外，留给本 ADR。
 
 InteractionBus（ADR-0006）提供交互事件。LoopStateManager（ADR-0004）提供 propose_delta() 用于持久化。KnowledgeManager（ADR-0002）提供每 NPC 颜色饱和度值。
 

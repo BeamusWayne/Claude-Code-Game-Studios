@@ -140,7 +140,7 @@ const CALM_MAX: float = 0.3
 const INTENSE_MAX: float = 0.7
 
 @export var pressure_curve: Curve
-@export var base_duration: float = 300.0
+@export var base_duration: float = 180.0
 @export var min_night_duration: float = 60.0
 
 var pressure_level: float = 0.0

@@ -1,10 +1,14 @@
 # ADR-0009: NPC State Machine
 
 ## Status
-Accepted
+Accepted (enum unified with GDD 2026-05-15; see Amendment below)
 
 ## Date
 2026-05-14
+
+## Amendment (2026-05-15)
+
+NPCEmotionalState enum unified with GDD `design/gdd/npc-state-machine.md`. Old values (FRIENDLY, SUSPICIOUS, SECRETIVE, REVEALING) replaced with GDD values (TRUSTING, ANXIOUS, CURIOUS, FRIGHTENED). Transition table updated to match GDD formulas section. Code (`src/core/npc_manager.gd`) already used the correct GDD enum; this change brings the ADR documentation into alignment.
 
 ## Last Verified
 2026-05-14
@@ -60,7 +64,7 @@ No NPC system exists yet. This is a greenfield design. The LoopStateManager (ADR
 
 ### Requirements
 
-- Each NPC has an emotional state from a defined enum (NEUTRAL, FRIENDLY, SUSPICIOUS, HOSTILE, SECRETIVE, REVEALING)
+- Each NPC has an emotional state from a defined enum (NEUTRAL, CURIOUS, ANXIOUS, HOSTILE, TRUSTING, FRIGHTENED)
 - State transitions triggered by: player dialogue choices, item presentation, cross-loop knowledge demonstration, time pressure (TimerService phases)
 - NPC initial state per night comes from NPCTemplate (part of NightTemplate)
 - NPC state persists across nights via LoopStateManager's DeltaAccumulator
@@ -125,12 +129,12 @@ Trust/suspicion values are explicitly NOT stored in NPC state. The future NPC Tr
 **NPCEmotionalState Enum**:
 ```gdscript
 enum NPCEmotionalState {
-    NEUTRAL,       ## Default disposition. NPC is guarded but not hostile.
-    FRIENDLY,      ## Player has built rapport. NPC shares more openly.
-    SUSPICIOUS,    ## NPC senses the player knows more than they should.
-    HOSTILE,       ## NPC actively resists interaction. Reduced dialogue.
-    SECRETIVE,     ## NPC is hiding something specific. Guarded responses.
-    REVEALING,     ## NPC is on the verge of sharing a secret.
+    NEUTRAL,      ## Default calm state. Standard dialogue options.
+    CURIOUS,      ## Attracted by player's new clues. Extra dialogue branches.
+    ANXIOUS,      ## Feels threatened or uneasy. Avoids sensitive topics.
+    HOSTILE,      ## Actively confrontational, refuses to cooperate. Limited dialogue.
+    TRUSTING,     ## Has developed trust toward player. Shares hints proactively.
+    FRIGHTENED,   ## Extreme fear. Short responses, may reveal critical info.
 }
 ```
 
@@ -324,24 +328,26 @@ func _initialize_npcs_from_template(night: int) -> void:
 
 func _is_valid_transition(from: NPCEmotionalState, to: NPCEmotionalState) -> bool:
     ## Transition validation table.
-    ## Not all transitions are valid -- e.g., NEUTRAL -> REVEALING requires
+    ## Not all transitions are valid -- e.g., NEUTRAL -> FRIGHTENED requires
     ## intermediate steps. This prevents jarring NPC behavior.
     match from:
         NPCEmotionalState.NEUTRAL:
-            return to in [NPCEmotionalState.FRIENDLY, NPCEmotionalState.SUSPICIOUS,
-                          NPCEmotionalState.SECRETIVE]
-        NPCEmotionalState.FRIENDLY:
-            return to in [NPCEmotionalState.NEUTRAL, NPCEmotionalState.REVEALING,
-                          NPCEmotionalState.SECRETIVE]
-        NPCEmotionalState.SUSPICIOUS:
-            return to in [NPCEmotionalState.HOSTILE, NPCEmotionalState.NEUTRAL]
+            return to in [NPCEmotionalState.CURIOUS, NPCEmotionalState.ANXIOUS,
+                          NPCEmotionalState.TRUSTING]
+        NPCEmotionalState.CURIOUS:
+            return to in [NPCEmotionalState.NEUTRAL, NPCEmotionalState.TRUSTING,
+                          NPCEmotionalState.ANXIOUS]
+        NPCEmotionalState.ANXIOUS:
+            return to in [NPCEmotionalState.HOSTILE, NPCEmotionalState.FRIGHTENED,
+                          NPCEmotionalState.NEUTRAL]
         NPCEmotionalState.HOSTILE:
-            return to in [NPCEmotionalState.SUSPICIOUS, NPCEmotionalState.NEUTRAL]
-        NPCEmotionalState.SECRETIVE:
-            return to in [NPCEmotionalState.REVEALING, NPCEmotionalState.HOSTILE,
-                          NPCEmotionalState.FRIENDLY]
-        NPCEmotionalState.REVEALING:
-            return to in [NPCEmotionalState.FRIENDLY, NPCEmotionalState.SUSPICIOUS]
+            return to in [NPCEmotionalState.ANXIOUS, NPCEmotionalState.NEUTRAL]
+        NPCEmotionalState.TRUSTING:
+            return to in [NPCEmotionalState.NEUTRAL, NPCEmotionalState.CURIOUS,
+                          NPCEmotionalState.ANXIOUS]
+        NPCEmotionalState.FRIGHTENED:
+            return to in [NPCEmotionalState.ANXIOUS, NPCEmotionalState.HOSTILE,
+                          NPCEmotionalState.NEUTRAL]
         _:
             return false
 
@@ -392,29 +398,29 @@ func _load_npc_template(npc_id: StringName, night: int) -> NPCTemplate:
 **State Transition Diagram**:
 ```
                     ┌──────────────┐
-                    │   NEUTRAL    │◄─── SUSPICIOUS, HOSTILE
+                    │   NEUTRAL    │◄─── ANXIOUS, HOSTILE, TRUSTING, FRIGHTENED
                     └──┬─┬─┬───────┘
                        │ │ │
           ┌────────────┘ │ └──────────────┐
           ▼              │                ▼
    ┌─────────────┐      │         ┌──────────────┐
-   │  FRIENDLY   │◄─────┼─────────│  SUSPICIOUS  │──┐
+   │  TRUSTING   │◄─────┼─────────│   ANXIOUS    │──┐
    └──┬─┬────────┘      │         └──────┬───────┘  │
       │ │               │                │          │
       │ └──────────┐    │                ▼          │
       │            ▼    │         ┌──────────────┐  │
       │    ┌────────────┤         │   HOSTILE    │──┤
-      │    │ SECRETIVE  │         └──────────────┘  │
+      │    │  CURIOUS   │         └──────────────┘  │
       │    └──┬─┬───────┘                           │
       │       │ │                                   │
       │       │ └──────────────┐                    │
       │       ▼                │                    │
       │  ┌──────────────┐     │                    │
-      │  │  REVEALING   │─────┼────────────────────┘
+      │  │ FRIGHTENED   │─────┼────────────────────┘
       │  └──────────────┘     │
       │                       │
       └───────────────────────┘
-  (NEUTRAL reachable from: FRIENDLY, SUSPICIOUS, HOSTILE only)
+  (NEUTRAL reachable from: CURIOUS, ANXIOUS, HOSTILE, TRUSTING, FRIGHTENED)
 ```
 
 ### Implementation Guidelines
@@ -455,7 +461,7 @@ func _load_npc_template(npc_id: StringName, night: int) -> NPCTemplate:
 
 ### Alternative 3: Resource-Per-State Pattern
 
-- **Description**: Each possible NPC state (NEUTRAL on night 1, FRIENDLY on night 3, etc.) is a separate Resource instance with all properties embedded. State transitions load a new Resource.
+- **Description**: Each possible NPC state (NEUTRAL on night 1, TRUSTING on night 3, etc.) is a separate Resource instance with all properties embedded. State transitions load a new Resource.
 - **Pros**: Full editor control over every state; each state is a complete snapshot; easy to preview in editor.
 - **Cons**: Resource explosion (5 NPCs x 7 nights x 6 states = 210 Resources); merge conflicts in team editing; difficult to track incremental changes; duplicative data when most properties stay the same between states.
 - **Rejection Reason**: NPCTemplate per night (5 x 7 = 35 Resources maximum) is manageable. Per-state Resources would multiply this by the number of possible states, creating a combinatorial explosion that is hard to author and maintain. The enum + template approach keeps authoring burden proportional to nights, not nights x states.
@@ -468,7 +474,7 @@ func _load_npc_template(npc_id: StringName, night: int) -> NPCTemplate:
 - Integration with LoopStateManager's propose_delta() ensures NPC state mutations follow the same persistence and conflict-resolution rules as all other game state
 - NPCManager provides a clean query interface for downstream systems, preventing direct coupling to LoopStateManager internals
 - NPCTemplate resources allow per-night NPC configuration without code changes
-- Transition validation prevents jarring emotional shifts (e.g., NEUTRAL directly to REVEALING), supporting Pillar 4's requirement that NPCs feel like characters with guard and agency
+- Transition validation prevents jarring emotional shifts (e.g., NEUTRAL directly to FRIGHTENED), supporting Pillar 4's requirement that NPCs feel like characters with guard and agency
 - Signal-based communication keeps NPCManager decoupled from dialogue, trust, and event systems
 - Static positions in MVP keep implementation simple; the architecture supports future scheduling without restructuring
 - force_state_transition() provides an escape valve for narrative designers without undermining the normal transition rules
@@ -514,7 +520,7 @@ func _load_npc_template(npc_id: StringName, night: int) -> NPCTemplate:
 
 | GDD Document | System | Requirement | How This ADR Satisfies It |
 |-------------|--------|-------------|--------------------------|
-| game-concept.md | Pillar 4 | 每个住客都有要守护的秘密 -- NPC不是信息贩卖机 | Emotional state enum models NPC disposition; state transitions require player effort; SECRETIVE and HOSTILE states gate information |
+| game-concept.md | Pillar 4 | 每个住客都有要守护的秘密 -- NPC不是信息贩卖机 | Emotional state enum models NPC disposition; state transitions require player effort; CURIOUS and HOSTILE states gate information |
 | game-concept.md | Pillar 4 | 住客审问 -- NPC对话根据跨循环状态变化 | NPC state persists cross-loop via DeltaAccumulator; dialogue_availability is queryable; dialogue_id changes per night |
 | game-concept.md | Core Mechanics #4 | 5个NPC有独立的动机、恐惧和谎言 | Per-NPC NPCTemplate resources allow individual configuration; NPCManager provides per-NPC queries |
 | loop-state-management.md | Dependencies | NPC状态机注册路径 + propose_delta() | NPCManager.register_state_paths() registers all NPC paths; request_state_transition() uses propose_delta() |
@@ -560,8 +566,8 @@ New system. Implementation order:
 10. npc_interaction_requested signal emitted with correct npc_id and event data
 11. get_npc_ids_in_room() returns only NPCs whose location matches the queried room
 12. NPCTemplate fallback chain works: night_N -> night_1 -> programmatic default
-13. _is_valid_transition() blocks NEUTRAL -> REVEALING (requires intermediate steps)
-14. _is_valid_transition() allows SECRETIVE -> REVEALING (valid path to revelation)
+13. _is_valid_transition() blocks NEUTRAL -> FRIGHTENED (requires intermediate steps)
+14. _is_valid_transition() allows ANXIOUS -> FRIGHTENED (valid path to extreme fear)
 15. force_state_transition() bypasses validation and uses elevated priority
 16. Serialization round-trip: NPC state restored correctly after save/load cycle
 17. night_advanced re-initializes NPC cache from templates + DeltaAccumulator

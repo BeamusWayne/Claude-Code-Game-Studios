@@ -63,8 +63,8 @@ func test_default_curve_created_when_null() -> void:
 func test_start_night_timer_sets_state() -> void:
 	_timer.start_night_timer()
 	assert_bool(_timer.is_active).is_true()
-	assert_float(_timer.remaining_time).is_equal(300.0)
-	assert_float(_timer.total_duration).is_equal(300.0)
+	assert_float(_timer.remaining_time).is_equal(180.0)
+	assert_float(_timer.total_duration).is_equal(180.0)
 	assert_float(_timer.pressure_level).is_equal(0.0)
 	assert_int(_timer.current_phase).is_equal(0)
 	assert_float(_timer.time_scale).is_equal(1.0)
@@ -74,7 +74,7 @@ func test_start_night_timer_emits_started_signal() -> void:
 	_timer.start_night_timer()
 	assert_int(_started_events.size()).is_equal(1)
 	assert_int(_started_events[0]["night"]).is_equal(1)
-	assert_float(_started_events[0]["duration"]).is_equal(300.0)
+	assert_float(_started_events[0]["duration"]).is_equal(180.0)
 
 
 func test_start_night_timer_resets_previous_state() -> void:
@@ -84,7 +84,7 @@ func test_start_night_timer_resets_previous_state() -> void:
 	_timer.current_phase = 1
 	_timer.time_scale = 0.5
 	_timer.start_night_timer()
-	assert_float(_timer.remaining_time).is_equal(300.0)
+	assert_float(_timer.remaining_time).is_equal(180.0)
 	assert_float(_timer.pressure_level).is_equal(0.0)
 	assert_int(_timer.current_phase).is_equal(0)
 	assert_float(_timer.time_scale).is_equal(1.0)
@@ -112,7 +112,7 @@ func test_stop_timer_does_not_clear_remaining_time() -> void:
 	_timer.start_night_timer()
 	_timer._process(10.0)
 	_timer.stop_timer()
-	assert_float(_timer.remaining_time).is_equal(290.0)
+	assert_float(_timer.remaining_time).is_equal(170.0)
 	assert_bool(_timer.is_active).is_false()
 
 
@@ -142,26 +142,26 @@ func test_set_time_scale_clamps_to_valid_range() -> void:
 func test_process_counts_down_with_delta() -> void:
 	_timer.start_night_timer()
 	_timer._process(10.0)
-	assert_float(_timer.remaining_time).is_equal(290.0)
+	assert_float(_timer.remaining_time).is_equal(170.0)
 
 
 func test_process_applies_time_scale() -> void:
 	_timer.start_night_timer()
 	_timer.set_time_scale(0.5)
 	_timer._process(10.0)
-	assert_float(_timer.remaining_time).is_equal(295.0)
+	assert_float(_timer.remaining_time).is_equal(175.0)
 
 
 func test_process_time_scale_zero_freezes_countdown() -> void:
 	_timer.start_night_timer()
 	_timer.set_time_scale(0.0)
 	_timer._process(10.0)
-	assert_float(_timer.remaining_time).is_equal(300.0)
+	assert_float(_timer.remaining_time).is_equal(180.0)
 
 
 func test_process_pressure_at_midpoint() -> void:
 	_timer.start_night_timer()
-	_timer.remaining_time = 150.0
+	_timer.remaining_time = 90.0
 	_timer._process(0.001)
 	assert_float(_timer.pressure_level).is_greater(0.49)
 	assert_float(_timer.pressure_level).is_less(0.51)
@@ -181,7 +181,7 @@ func test_process_pressure_clamps_output() -> void:
 	curve.add_point(Vector2(1.0, 1.0))
 	_timer.pressure_curve = curve
 	_timer.start_night_timer()
-	_timer.remaining_time = 150.0
+	_timer.remaining_time = 90.0
 	_timer._process(0.001)
 	assert_float(_timer.pressure_level).is_equal(1.0)
 
@@ -198,7 +198,7 @@ func test_phase_starts_calm() -> void:
 
 func test_phase_transition_calm_to_intense() -> void:
 	_timer.start_night_timer()
-	_timer.remaining_time = 210.0
+	_timer.remaining_time = 126.0
 	_timer._process(0.001)
 	assert_int(_timer.current_phase).is_equal(1)
 	assert_int(_phase_events.size()).is_greater_equal(1)
@@ -210,7 +210,7 @@ func test_phase_transition_calm_to_intense() -> void:
 func test_phase_transition_intense_to_critical() -> void:
 	_timer.start_night_timer()
 	_timer.current_phase = 1
-	_timer.remaining_time = 90.0
+	_timer.remaining_time = 54.0
 	_timer._process(0.001)
 	assert_int(_timer.current_phase).is_equal(2)
 	assert_int(_phase_events.size()).is_greater_equal(1)
@@ -222,7 +222,7 @@ func test_phase_transition_intense_to_critical() -> void:
 
 func test_phase_no_transition_when_below_threshold() -> void:
 	_timer.start_night_timer()
-	_timer.remaining_time = 240.0
+	_timer.remaining_time = 144.0
 	var phases_before: int = _phase_events.size()
 	_timer._process(0.001)
 	assert_int(_timer.current_phase).is_equal(0)
@@ -307,8 +307,8 @@ func test_serialize_deserialize_roundtrip() -> void:
 	_timer.set_time_scale(0.75)
 
 	var data: Dictionary = _timer.serialize()
-	assert_float(data["remaining_time"]).is_equal(250.0)
-	assert_float(data["total_duration"]).is_equal(300.0)
+	assert_float(data["remaining_time"]).is_equal(130.0)
+	assert_float(data["total_duration"]).is_equal(180.0)
 	assert_float(data["pressure_level"]).is_greater(0.0)
 	assert_float(data["time_scale"]).is_equal(0.75)
 	assert_bool(data["is_active"]).is_true()
@@ -318,8 +318,8 @@ func test_serialize_deserialize_roundtrip() -> void:
 	add_child(fresh)
 	fresh.deserialize(data)
 
-	assert_float(fresh.remaining_time).is_equal(250.0)
-	assert_float(fresh.total_duration).is_equal(300.0)
+	assert_float(fresh.remaining_time).is_equal(130.0)
+	assert_float(fresh.total_duration).is_equal(180.0)
 	assert_float(fresh.pressure_level).is_equal(data["pressure_level"])
 	assert_int(fresh.current_phase).is_equal(data["current_phase"])
 	assert_float(fresh.time_scale).is_equal(0.75)
@@ -391,7 +391,7 @@ func test_on_night_ready_starts_timer() -> void:
 func test_night_ready_callback_restarts_timer() -> void:
 	_timer.start_night_timer()
 	_timer._process(100.0)
-	assert_float(_timer.remaining_time).is_less(300.0)
+	assert_float(_timer.remaining_time).is_less(180.0)
 	_timer._on_night_ready(2)
-	assert_float(_timer.remaining_time).is_equal(300.0)
+	assert_float(_timer.remaining_time).is_equal(180.0)
 	assert_bool(_timer.is_active).is_true()

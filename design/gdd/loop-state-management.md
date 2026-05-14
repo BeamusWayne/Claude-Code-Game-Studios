@@ -199,6 +199,8 @@ signal advance_failed(step: int, error: String)
 
 ### night_duration — 每夜时长
 
+> **计时器时长由 TimerService 拥有**（见 `design/gdd/countdown-timer.md` 和 ADR-0008）。循环状态管理不定义计时器时长——它仅提供当夜编号供 TimerService 查询。以下公式保留作为概念参考，实际值以 TimerService 为准。
+
 `night_duration(night) = BASE_DURATION + rhythm_offset(night)`
 
 MVP：`rhythm_offset(night) = 0`（恒定时长）。
@@ -209,12 +211,12 @@ MVP：`rhythm_offset(night) = 0`（恒定时长）。
 | 变量 | 符号 | 类型 | 范围 | 说明 |
 |------|------|------|------|------|
 | 夜编号 | `night` | int | 1..7 | 当前夜 |
-| 基础时长 | `BASE_DURATION` | float | 300.0 | 默认 5 分钟 |
+| 基础时长 | `BASE_DURATION` | float | — | 由 TimerService 定义（见 countdown-timer.md） |
 | 节奏偏移 | `rhythm_offset` | float | 0.0 (MVP) | 每夜时长增减 |
-| 最短时长 | `MIN_NIGHT_DURATION` | float | 60.0 | 安全下限 |
-| 夜时长 | `night_duration` | float | ≥ 60.0 | 实现时 clamp: max(MIN, result) |
+| 最短时长 | `MIN_NIGHT_DURATION` | float | — | 由 TimerService 定义（见 countdown-timer.md） |
+| 夜时长 | `night_duration` | float | ≥ MIN | 实现时 clamp: max(MIN, result) |
 
-**输出范围**：正浮点数，不低于 MIN_NIGHT_DURATION。
+**输出范围**：正浮点数，不低于 MIN_NIGHT_DURATION（TimerService 定义）。
 
 ### consequence_count — 后果计数查询
 
@@ -302,17 +304,17 @@ MVP：`rhythm_offset(night) = 0`（恒定时长）。
 
 | 旋钮 | 默认值 | 安全范围 | 效果 |
 |------|--------|---------|------|
-| `BASE_DURATION` | 300.0 秒 | 180.0–600.0 | 每夜基础倒计时时长。降低=更多压力，更少探索 |
-| `MIN_NIGHT_DURATION` | 60.0 秒 | 30.0–120.0 | 夜时长安全下限。防止配置错误导致不可玩的短夜 |
+| `BASE_DURATION` | — | — | **已迁移至 TimerService**（见 countdown-timer.md 和 ADR-0008）。循环状态管理不再定义此值 |
+| `MIN_NIGHT_DURATION` | — | — | **已迁移至 TimerService**（见 countdown-timer.md 和 ADR-0008）。循环状态管理不再定义此值 |
 | `PRIORITY_WEIGHT` | 8 | 8–100 | 增量冲突解决中的优先级乘数。必须 > max_night (7) |
 | `DEFAULT_DELTA_PRIORITY` | 0 | 0–9 | 玩家行动产生的增量的默认优先级 |
 | `NARRATIVE_DELTA_PRIORITY` | 10 | 10–49 | 叙事覆盖使用的优先级 |
 | `ENGINE_DELTA_PRIORITY` | 50 | 50–100 | 引擎级状态覆盖的保留优先级 |
 | `MAX_NIGHTS` | 7 | 3–10 | 游戏总夜数。影响循环计数器和模板加载数量 |
-| `RHYTHM_TABLE` | [] (空) | — | 每夜时长偏移数组。空=恒定时长(MVP)。填充后启用节奏变化 |
-| `NIGHT_RHYTHM_CONFIG` | {} (空) | — | 每夜节奏配置（Dictionary: night → {rhythm_profile: StringName}）。空=无节奏(MVP)。倒计时系统和事件调度器查询此配置获取当夜节奏特征（低语/咆哮/过渡） |
+| `RHYTHM_TABLE` | — | — | **已迁移至 TimerService**（见 countdown-timer.md 和 ADR-0008）。循环状态管理不再定义此值 |
+| `NIGHT_RHYTHM_CONFIG` | — | — | **已迁移至 TimerService**（见 countdown-timer.md 和 ADR-0008）。循环状态管理不再定义此值 |
 
-> **交互说明**：`BASE_DURATION` 和 `RHYTHM_TABLE` 组合使用。降低 BASE 同时填充 RHYTHM_TABLE 可能导致某夜时长低于 `MIN_NIGHT_DURATION`——clamp 保护生效。单独调整 BASE 不影响节奏曲线形状，只影响整体压力水平。
+> **计时器旋钮迁移说明**：`BASE_DURATION`、`MIN_NIGHT_DURATION`、`RHYTHM_TABLE`、`NIGHT_RHYTHM_CONFIG` 已迁移至 TimerService（见 `design/gdd/countdown-timer.md` 和 ADR-0008）。循环状态管理不再负责计时器配置——它只提供 `current_night` 供 TimerService 查询当夜编号。
 
 ## Acceptance Criteria
 
@@ -368,9 +370,9 @@ MVP：`rhythm_offset(night) = 0`（恒定时长）。
 
 **night_duration**
 
-- AC-F2-01: Given BASE_DURATION=300, RHYTHM_TABLE=[], When night_duration(1) 计算, Then 返回 300.0
-- AC-F2-02: Given BASE_DURATION=180, RHYTHM_TABLE=[-120], When 计算, Then 返回 max(60, 60) = 60.0（clamp 生效）
-- AC-F2-03: Given MIN_NIGHT_DURATION=60, BASE_DURATION=50, When 计算, Then 返回 60.0（不低于安全下限）
+- AC-F2-01: Given BASE_DURATION 由 TimerService 提供（见 countdown-timer.md）, RHYTHM_TABLE=[], When night_duration(1) 计算, Then 返回 TimerService 配置的基础时长
+- AC-F2-02: Given TimerService 配置的 BASE_DURATION 和 RHYTHM_TABLE=[-120], When 计算, Then 返回 max(MIN_NIGHT_DURATION, 结果)（clamp 生效，MIN 由 TimerService 定义）
+- AC-F2-03: Given MIN_NIGHT_DURATION 由 TimerService 定义, BASE_DURATION 低于 MIN, When 计算, Then 返回 MIN_NIGHT_DURATION（不低于安全下限）
 
 **consequence_count**
 

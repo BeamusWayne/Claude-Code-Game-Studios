@@ -39,15 +39,31 @@ func set_phase(phase: NightPhase) -> void:
 
 
 func register_consequence(consequence_id: StringName, mutation: Dictionary) -> void:
-	for existing in _consequences:
-		if existing["id"] == consequence_id:
+	# Immutable: build new array instead of mutating in-place.
+	# Callers may still hold references to the old array/dictionaries
+	# and must not see them silently change.
+	for i: int in _consequences.size():
+		if _consequences[i]["id"] == consequence_id:
 			push_warning("LoopStateManager: consequence '%s' already registered, updating" % consequence_id)
-			existing["mutation"] = mutation
+			var updated: Array[Dictionary] = []
+			for j: int in _consequences.size():
+				if j == i:
+					updated.append({
+						"id": _consequences[i]["id"],
+						"mutation": mutation.duplicate(true),
+					})
+				else:
+					updated.append(_consequences[j])
+			_consequences = updated
 			return
-	_consequences.append({
+	var new_consequences: Array[Dictionary] = []
+	for entry: Dictionary in _consequences:
+		new_consequences.append(entry)
+	new_consequences.append({
 		"id": consequence_id,
-		"mutation": mutation,
+		"mutation": mutation.duplicate(true),
 	})
+	_consequences = new_consequences
 	consequence_registered.emit(consequence_id)
 
 

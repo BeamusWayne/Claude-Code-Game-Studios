@@ -61,7 +61,7 @@
 - ADR-0011: Night Transition Controller — Accepted (2026-05-14)
 - ADR-0012: NPC Trust/Suspicion — Accepted (2026-05-14)
 - ADR-0013: Conditional Dialogue Trees — Accepted (2026-05-14)
-- ADR-0014: Event Scheduler — Proposed (2026-05-14)
+- ADR-0014: Event Scheduler — Accepted (2026-05-15)
 
 ## Engine Specialists
 

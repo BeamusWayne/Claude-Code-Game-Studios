@@ -7,6 +7,7 @@ enum InputMethod { MOUSE, TOUCH }
 
 var _frame_buffer: Array[Dictionary] = []
 var _registered: Dictionary = {}
+var is_accepting: bool = true
 
 
 func register_interactable(id: StringName, info: Dictionary) -> void:
@@ -18,7 +19,11 @@ func unregister_interactable(id: StringName) -> void:
 
 
 func emit_interaction(event: Dictionary) -> void:
+	if not is_accepting:
+		return
 	_frame_buffer.append(event)
+	if _frame_buffer.size() == 1:
+		set_process(true)
 
 
 func _process(_delta: float) -> void:
@@ -27,6 +32,7 @@ func _process(_delta: float) -> void:
 	var resolved := _resolve_by_priority(_frame_buffer)
 	interaction_detected.emit(resolved)
 	_frame_buffer.clear()
+	set_process(false)
 
 
 func _resolve_by_priority(events: Array[Dictionary]) -> Dictionary:
@@ -48,3 +54,8 @@ func is_registered(id: StringName) -> bool:
 func clear_all() -> void:
 	_registered.clear()
 	_frame_buffer.clear()
+	set_process(false)
+
+
+func set_accepting(value: bool) -> void:
+	is_accepting = value

@@ -275,13 +275,17 @@ func _apply_template_overrides() -> void:
 
 
 func _apply_overrides_to_children(room_instance: Node2D, loop_state: Node) -> void:
-	var children: Array[Node] = room_instance.find_children("*", "")
-	for child in children:
+	_apply_overrides_recursive(room_instance, loop_state)
+
+
+func _apply_overrides_recursive(node: Node, loop_state: Node) -> void:
+	for child in node.get_children():
 		var entity_id: StringName = StringName(child.name)
 		_try_apply_override(child, entity_id, "visible", loop_state)
 		_try_apply_override(child, entity_id, "disabled", loop_state)
 		_try_apply_override(child, entity_id, "is_locked", loop_state)
 		_try_apply_override(child, entity_id, "is_open", loop_state)
+		_apply_overrides_recursive(child, loop_state)
 
 
 func _try_apply_override(node: Node, entity_id: StringName, property: String, loop_state: Node) -> void:

@@ -24,33 +24,314 @@
 #
 # STATUS VALUES: active | deprecated | superseded-by: TR-[system]-NNN
 
-version: 1
-last_updated: ""
+version: 3
+last_updated: "2026-05-14"
 
-requirements: []
+requirements:
+  # --- GAME CONCEPT (cross-cutting) ---
+  - id: TR-concept-001
+    system: game-concept
+    gdd: design/gdd/game-concept.md
+    requirement: "Ink wash rendering pipeline with paper grain, ink density, and dry brush texture"
+    created: "2026-05-14"
+    revised: ""
+    status: active
 
-# --- EXAMPLE ENTRIES (remove when first real entries are added) ---
-#
-# - id: TR-combat-001
-#   system: combat
-#   gdd: design/gdd/combat-system.md
-#   requirement: "Player takes damage from enemies based on attack power minus defence"
-#   created: 2026-03-10
-#   revised: ""
-#   status: active
-#
-# - id: TR-combat-002
-#   system: combat
-#   gdd: design/gdd/combat-system.md
-#   requirement: "Combo window timing is 0.4 seconds between hits"
-#   created: 2026-03-10
-#   revised: "2026-04-01"
-#   status: active
-#
-# - id: TR-combat-003
-#   system: combat
-#   gdd: design/gdd/combat-system.md
-#   requirement: "Old damage formula using raw stats"
-#   created: 2026-03-10
-#   revised: ""
-#   status: superseded-by: TR-combat-001
+  - id: TR-concept-002
+    system: game-concept
+    gdd: design/gdd/game-concept.md
+    requirement: "Knowledge-driven dynamic color restoration (knowledge = color)"
+    created: "2026-05-14"
+    revised: ""
+    status: active
+
+  - id: TR-concept-003
+    system: game-concept
+    gdd: design/gdd/game-concept.md
+    requirement: "Per-guest unique traditional colors (5 NPC colors + gold ochre for insights)"
+    created: "2026-05-14"
+    revised: ""
+    status: active
+
+  - id: TR-concept-004
+    system: game-concept
+    gdd: design/gdd/game-concept.md
+    requirement: "7-night time loop: scene state resets each night, player knowledge persists"
+    created: "2026-05-14"
+    revised: ""
+    status: active
+
+  - id: TR-concept-005
+    system: game-concept
+    gdd: design/gdd/game-concept.md
+    requirement: "Player choices create permanent cross-loop changes to the hotel"
+    created: "2026-05-14"
+    revised: ""
+    status: active
+
+  - id: TR-concept-006
+    system: game-concept
+    gdd: design/gdd/game-concept.md
+    requirement: "Countdown pressure system with whisper/roar rhythm per night"
+    created: "2026-05-14"
+    revised: ""
+    status: active
+
+  - id: TR-concept-007
+    system: game-concept
+    gdd: design/gdd/game-concept.md
+    requirement: "Clue connection/deduction mechanism that generates new insights from combining clues"
+    created: "2026-05-14"
+    revised: ""
+    status: active
+
+  - id: TR-concept-008
+    system: game-concept
+    gdd: design/gdd/game-concept.md
+    requirement: "NPC interrogation with conditional dialogue trees influenced by cross-loop state"
+    created: "2026-05-14"
+    revised: ""
+    status: active
+
+  - id: TR-concept-009
+    system: game-concept
+    gdd: design/gdd/game-concept.md
+    requirement: "Point-and-click interaction model supporting both mouse and touch"
+    created: "2026-05-14"
+    revised: ""
+    status: active
+
+  - id: TR-concept-010
+    system: game-concept
+    gdd: design/gdd/game-concept.md
+    requirement: "Cross-platform support: PC (Steam) + macOS + mobile portability"
+    created: "2026-05-14"
+    revised: ""
+    status: active
+
+  - id: TR-concept-011
+    system: game-concept
+    gdd: design/gdd/game-concept.md
+    requirement: "Pressure rhythm phases (whisper/roar/transition) with trigger conditions"
+    created: "2026-05-14"
+    revised: ""
+    status: active
+
+  - id: TR-concept-012
+    system: game-concept
+    gdd: design/gdd/game-concept.md
+    requirement: "Touch-friendly all interactions; no hover-only mechanics"
+    created: "2026-05-14"
+    revised: ""
+    status: active
+
+  - id: TR-concept-013
+    system: game-concept
+    gdd: design/gdd/game-concept.md
+    requirement: "Dual visual register: Notebook (KaiTi/xuan paper) vs HUD (FangSong/seal stamps)"
+    created: "2026-05-14"
+    revised: ""
+    status: active
+
+  - id: TR-concept-014
+    system: game-concept
+    gdd: design/gdd/game-concept.md
+    requirement: "Save/load persistence with crash recovery across sessions"
+    created: "2026-05-14"
+    revised: ""
+    status: active
+
+  - id: TR-concept-015
+    system: game-concept
+    gdd: design/gdd/game-concept.md
+    requirement: "Notebook (clue database) persists across loop resets"
+    created: "2026-05-14"
+    revised: ""
+    status: active
+
+  # --- LOOP STATE MANAGEMENT ---
+  - id: TR-loop-001
+    system: loop-state
+    gdd: design/gdd/loop-state-management.md
+    requirement: "Three-layer state separation: NightTemplate (resets) / ActiveState (rebuilt) / DeltaAccumulator (persistent)"
+    created: "2026-05-14"
+    revised: ""
+    status: active
+
+  - id: TR-loop-002
+    system: loop-state
+    gdd: design/gdd/loop-state-management.md
+    requirement: "Atomic advance_night() with 7-step rollback sequence"
+    created: "2026-05-14"
+    revised: ""
+    status: active
+
+  - id: TR-loop-003
+    system: loop-state
+    gdd: design/gdd/loop-state-management.md
+    requirement: "propose_delta() as sole state mutation entry point with path validation"
+    created: "2026-05-14"
+    revised: ""
+    status: active
+
+  - id: TR-loop-004
+    system: loop-state
+    gdd: design/gdd/loop-state-management.md
+    requirement: "Subsystem path registration at startup via register_state_paths()"
+    created: "2026-05-14"
+    revised: ""
+    status: active
+
+  - id: TR-loop-005
+    system: loop-state
+    gdd: design/gdd/loop-state-management.md
+    requirement: "Delta conflict resolution using sort_key formula (priority * PRIORITY_WEIGHT + source_night)"
+    created: "2026-05-14"
+    revised: ""
+    status: active
+
+  - id: TR-loop-006
+    system: loop-state
+    gdd: design/gdd/loop-state-management.md
+    requirement: "Signal interface for loop transitions (night_advanced, night_ended_final, night_ready, state_changed)"
+    created: "2026-05-14"
+    revised: ""
+    status: active
+
+  - id: TR-loop-007
+    system: loop-state
+    gdd: design/gdd/loop-state-management.md
+    requirement: "Deep-copy guarantee for SNAPSHOT step using Resource duplicate_deep()"
+    created: "2026-05-14"
+    revised: ""
+    status: active
+
+  - id: TR-loop-008
+    system: loop-state
+    gdd: design/gdd/loop-state-management.md
+    requirement: "Night rhythm configuration support via NIGHT_RHYTHM_CONFIG dictionary"
+    created: "2026-05-14"
+    revised: ""
+    status: active
+
+  - id: TR-loop-009
+    system: loop-state
+    gdd: design/gdd/loop-state-management.md
+    requirement: "Save/load crash recovery integrity (orphan deltas, missing DeltaAccumulator, mid-REBUILD crash)"
+    created: "2026-05-14"
+    revised: ""
+    status: active
+
+  # --- CLUE DATABASE ---
+  - id: TR-clue-001
+    system: clue-database
+    gdd: design/gdd/clue-database.md
+    requirement: "Unified KnowledgeEntry schema covering both clues and insights with EntryType enum"
+    created: "2026-05-14"
+    revised: ""
+    status: active
+
+  - id: TR-clue-002
+    system: clue-database
+    gdd: design/gdd/clue-database.md
+    requirement: "Connection structure with bidirectional tracking, valid/invalid status, and insight linkage"
+    created: "2026-05-14"
+    revised: ""
+    status: active
+
+  - id: TR-clue-003
+    system: clue-database
+    gdd: design/gdd/clue-database.md
+    requirement: "contextual_unlocks cascade mechanism: insights add reinterpretation text to source clues"
+    created: "2026-05-14"
+    revised: ""
+    status: active
+
+  - id: TR-clue-004
+    system: clue-database
+    gdd: design/gdd/clue-database.md
+    requirement: "CRUD, search (by tag/source/NPC), and connection operations for knowledge management"
+    created: "2026-05-14"
+    revised: ""
+    status: active
+
+  # --- ROOM / LOCATION MANAGEMENT ---
+  - id: TR-room-001
+    system: room-location
+    gdd: design/gdd/room-location-management.md
+    requirement: "Single-room-in-memory with on-demand PackedScene instantiation and ROOM_PATHS registry"
+    created: "2026-05-14"
+    revised: ""
+    status: active
+
+  - id: TR-room-002
+    system: room-location
+    gdd: design/gdd/room-location-management.md
+    requirement: "9-step atomic transition protocol with concurrency guard, rollback, and pending-reset mechanism"
+    created: "2026-05-14"
+    revised: ""
+    status: active
+
+  - id: TR-room-003
+    system: room-location
+    gdd: design/gdd/room-location-management.md
+    requirement: "Template vs persistent state separation with PackedScene re-instantiation for nightly reset"
+    created: "2026-05-14"
+    revised: ""
+    status: active
+
+  - id: TR-room-004
+    system: room-location
+    gdd: design/gdd/room-location-management.md
+    requirement: "RoomManager-owned Interactable registration lifecycle (POST_LOAD register, PRE_UNLOAD unregister before queue_free)"
+    created: "2026-05-14"
+    revised: ""
+    status: active
+
+  - id: TR-room-005
+    system: room-location
+    gdd: design/gdd/room-location-management.md
+    requirement: "Exit handling via InteractionBus event filtering with spawn_point propagation in room_changed signal"
+    created: "2026-05-14"
+    revised: ""
+    status: active
+
+  - id: TR-room-006
+    system: room-location
+    gdd: design/gdd/room-location-management.md
+    requirement: "Night reset integration via night_ready/night_advanced signals with _pending_reset deferred execution"
+    created: "2026-05-14"
+    revised: ""
+    status: active
+
+  - id: TR-room-007
+    system: room-location
+    gdd: design/gdd/room-location-management.md
+    requirement: "Fade overlay on CanvasLayer 100 with Tween EASE_IN/EASE_OUT ink-wash animation for transitions"
+    created: "2026-05-14"
+    revised: ""
+    status: active
+
+  - id: TR-room-008
+    system: room-location
+    gdd: design/gdd/room-location-management.md
+    requirement: "Graceful error handling for PackedScene load failure with room fallback and error state"
+    created: "2026-05-14"
+    revised: ""
+    status: active
+
+  - id: TR-room-009
+    system: room-location
+    gdd: design/gdd/room-location-management.md
+    requirement: "Memory footprint and transition time budget formulas (F1-F4) for performance validation"
+    created: "2026-05-14"
+    revised: ""
+    status: active
+
+  - id: TR-room-010
+    system: room-location
+    gdd: design/gdd/room-location-management.md
+    requirement: "Scene structure validation (4 required child groups: Background, Interactables, NPCs, Exits) on LOAD step"
+    created: "2026-05-14"
+    revised: ""
+    status: active

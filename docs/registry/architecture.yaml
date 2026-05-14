@@ -30,7 +30,7 @@
 #   Superseded entries:     Grep pattern="status: superseded"
 
 version: 1
-last_updated: ""
+last_updated: "2026-05-14"
 
 # ─── STATE OWNERSHIP ─────────────────────────────────────────────────────────
 # Who is the authoritative owner of each piece of shared game state.
@@ -43,9 +43,172 @@ last_updated: ""
 # interface: how other systems access this state (read-only property, method call,
 #   signal, shared resource, etc.) — this is the contract other ADRs depend on.
 
-state_ownership: []
+state_ownership:
+  - state: knowledge_level
+    status: active
+    owner_system: knowledge-color-system
+    adr: docs/architecture/adr-0002-knowledge-color-accumulation.md
+    interface: "KnowledgeManager.knowledge_level (read-only float, 0.0-1.0)"
+    write_access: knowledge-color-system-only
+    referenced_by:
+      - docs/architecture/adr-0001-ink-wash-shader-pipeline.md
+      - docs/architecture/adr-0003-ui-visual-register-system.md
+    added: 2026-05-14
 
-# Example:
+  - state: npc_saturations
+    status: active
+    owner_system: knowledge-color-system
+    adr: docs/architecture/adr-0002-knowledge-color-accumulation.md
+    interface: "KnowledgeManager.get_npc_saturation(npc_id: StringName) -> float"
+    write_access: knowledge-color-system-only
+    referenced_by:
+      - docs/architecture/adr-0001-ink-wash-shader-pipeline.md
+    added: 2026-05-14
+
+  - state: current_night
+    status: active
+    owner_system: loop-state-system
+    adr: docs/architecture/adr-0004-loop-state-management.md
+    interface: "LoopStateManager.current_night (read-only int, 1-7)"
+    write_access: loop-state-system-only (via advance_night)
+    referenced_by:
+      - docs/architecture/adr-0003-ui-visual-register-system.md
+      - docs/architecture/adr-0005-clue-insight-unified-schema.md
+    added: 2026-05-14
+
+  - state: current_phase
+    status: active
+    owner_system: loop-state-system
+    adr: docs/architecture/adr-0004-loop-state-management.md
+    interface: "LoopStateManager.current_phase (NightPhase enum)"
+    write_access: loop-state-system-only
+    referenced_by:
+      - docs/architecture/adr-0003-ui-visual-register-system.md
+    added: 2026-05-14
+
+  - state: consequences
+    status: active
+    owner_system: loop-state-system
+    adr: docs/architecture/adr-0004-loop-state-management.md
+    interface: "LoopStateManager.register_consequence() / serialize()"
+    write_access: loop-state-system-only
+    referenced_by:
+      - docs/architecture/adr-0004-loop-state-management.md
+    added: 2026-05-14
+
+  - state: clue_entries
+    status: active
+    owner_system: clue-database
+    adr: docs/architecture/adr-0005-clue-insight-unified-schema.md
+    interface: "ClueDatabase.get_entry(id: StringName) -> Dictionary"
+    write_access: clue-database-only
+    referenced_by:
+      - docs/architecture/adr-0002-knowledge-color-accumulation.md
+      - docs/architecture/adr-0003-ui-visual-register-system.md
+    added: 2026-05-14
+
+  - state: clue_connections
+    status: active
+    owner_system: clue-database
+    adr: docs/architecture/adr-0005-clue-insight-unified-schema.md
+    interface: "ClueDatabase.connect_clues() / get_connections_for()"
+    write_access: clue-database-only
+    referenced_by:
+      - docs/architecture/adr-0002-knowledge-color-accumulation.md
+    added: 2026-05-14
+
+  - state: interaction_events
+    status: active
+    owner_system: interaction-bus
+    adr: docs/architecture/adr-0006-interaction-event-bus.md
+    interface: "InteractionBus.interaction_detected signal (Dictionary event)"
+    write_access: interaction-bus-only (emits); consumers read-only
+    referenced_by:
+      - docs/architecture/adr-0005-clue-insight-unified-schema.md
+      - docs/architecture/adr-0003-ui-visual-register-system.md
+    added: 2026-05-14
+
+  - state: room_template_state
+    status: active
+    owner_system: room-manager
+    adr: docs/architecture/adr-0007-room-location-management.md
+    interface: "RoomManager.get_room_state(room_id: StringName) -> Dictionary, RoomManager.set_room_state(room_id, property, value) — template-only"
+    write_access: room-manager-only (template state); loop-state-system-only (persistent mutations via register_consequence)
+    referenced_by:
+      - docs/architecture/adr-0004-loop-state-management.md
+      - docs/architecture/adr-0006-interaction-event-bus.md
+    added: 2026-05-14
+
+  - state: current_room_id
+    status: active
+    owner_system: room-manager
+    adr: docs/architecture/adr-0007-room-location-management.md
+    interface: "RoomManager.current_room_id (read-only StringName)"
+    write_access: room-manager-only
+    referenced_by:
+      - docs/architecture/adr-0003-ui-visual-register-system.md
+    added: 2026-05-14
+
+  - state: pressure_level
+    status: active
+    owner_system: timer-service
+    adr: docs/architecture/adr-0008-countdown-timer.md
+    interface: "TimerService.pressure_level (read-only float, 0.0-1.0)"
+    write_access: timer-service-only (via _process)
+    referenced_by:
+      - docs/architecture/adr-0001-ink-wash-shader-pipeline.md
+      - docs/architecture/adr-0003-ui-visual-register-system.md
+    added: 2026-05-14
+
+  - state: npc_emotional_state
+    status: active
+    owner_system: npc-manager
+    adr: docs/architecture/adr-0009-npc-state-machine.md
+    interface: "NPCManager.get_emotional_state(npc_id: StringName) -> NPCEmotionalState"
+    write_access: npc-manager-only (via request_state_transition / force_state_transition -> propose_delta)
+    referenced_by:
+      - docs/architecture/adr-0004-loop-state-management.md
+    added: 2026-05-14
+
+  - state: npc_location
+    status: active
+    owner_system: npc-manager
+    adr: docs/architecture/adr-0009-npc-state-machine.md
+    interface: "NPCManager.get_location(npc_id: StringName) -> StringName"
+    write_access: npc-manager-only (template-driven, resets each night)
+    referenced_by:
+      - docs/architecture/adr-0007-room-location-management.md
+    added: 2026-05-14
+
+  - state: npc_dialogue_availability
+    status: active
+    owner_system: npc-manager
+    adr: docs/architecture/adr-0009-npc-state-machine.md
+    interface: "NPCManager.is_dialogue_available(npc_id: StringName) -> bool"
+    write_access: npc-manager-only (via set_dialogue_availability -> propose_delta)
+    referenced_by:
+      - docs/architecture/adr-0003-ui-visual-register-system.md
+    added: 2026-05-14
+
+  - state: npc_trust_level
+    status: active
+    owner_system: trust-manager
+    adr: docs/architecture/adr-0012-npc-trust-suspicion.md
+    interface: "TrustManager.get_trust(npc_id: StringName) -> float (0.0-100.0)"
+    write_access: trust-manager-only (via apply_delta -> propose_delta)
+    referenced_by:
+      - docs/architecture/adr-0013-conditional-dialogue.md
+    added: 2026-05-14
+
+  - state: npc_suspicion_level
+    status: active
+    owner_system: trust-manager
+    adr: docs/architecture/adr-0012-npc-trust-suspicion.md
+    interface: "TrustManager.get_suspicion(npc_id: StringName) -> float (0.0-100.0)"
+    write_access: trust-manager-only (via apply_delta -> propose_delta)
+    referenced_by:
+      - docs/architecture/adr-0013-conditional-dialogue.md
+    added: 2026-05-14
 #
 # state_ownership:
 #   - state: player_health
@@ -71,11 +234,157 @@ state_ownership: []
 #
 # pattern options: signal | direct_call | event_bus | shared_resource | rpc | none
 
-interfaces: []
+interfaces:
+  - contract: knowledge_color_update
+    status: active
+    pattern: signal
+    producer: knowledge-color-system
+    consumers:
+      - ink-wash-shader
+      - npc-sprite-tint
+      - notebook-ui
+    adr: docs/architecture/adr-0002-knowledge-color-accumulation.md
+    signal_signature: "knowledge_level_changed(new_level: float), npc_color_updated(npc_id: StringName, saturation: float)"
+    referenced_by:
+      - docs/architecture/adr-0001-ink-wash-shader-pipeline.md
+      - docs/architecture/adr-0003-ui-visual-register-system.md
+    added: 2026-05-14
 
-# Example:
-#
-# interfaces:
+  - contract: loop_state_change
+    status: active
+    pattern: signal
+    producer: loop-state-system
+    consumers:
+      - ui-manager
+      - room-manager
+      - npc-manager
+    adr: docs/architecture/adr-0004-loop-state-management.md
+    signal_signature: "night_advanced(old_night: int, new_night: int), night_ready(night: int), consequence_registered(consequence_id: StringName)"
+    referenced_by:
+      - docs/architecture/adr-0003-ui-visual-register-system.md
+      - docs/architecture/adr-0005-clue-insight-unified-schema.md
+    added: 2026-05-14
+
+  - contract: knowledge_entry_change
+    status: active
+    pattern: signal
+    producer: clue-database
+    consumers:
+      - knowledge-manager
+      - notebook-ui
+      - discovery-notification
+    adr: docs/architecture/adr-0005-clue-insight-unified-schema.md
+    signal_signature: "clue_discovered(clue_id: StringName), insight_generated(insight_id: StringName), connection_made(clue_a: StringName, clue_b: StringName, is_valid: bool)"
+    referenced_by:
+      - docs/architecture/adr-0002-knowledge-color-accumulation.md
+      - docs/architecture/adr-0003-ui-visual-register-system.md
+    added: 2026-05-14
+
+  - contract: player_interaction
+    status: active
+    pattern: event_bus
+    producer: interaction-bus
+    consumers:
+      - clue-discovery
+      - npc-manager
+      - room-manager
+      - dialogue-trigger
+    adr: docs/architecture/adr-0006-interaction-event-bus.md
+    signal_signature: "interaction_detected(event: Dictionary) — event contains type, target_id, target_type, position, input_method, metadata"
+    referenced_by:
+      - docs/architecture/adr-0005-clue-insight-unified-schema.md
+    added: 2026-05-14
+
+  - contract: ui_state_change
+    status: active
+    pattern: signal
+    producer: ui-manager
+    consumers:
+      - hud
+      - dialogue-panel
+      - notebook-panel
+    adr: docs/architecture/adr-0003-ui-visual-register-system.md
+    signal_signature: "notebook_opened, notebook_closed, dialogue_started(npc_id: StringName), dialogue_ended, hud_element_activated(element: StringName)"
+    referenced_by:
+      - docs/architecture/adr-0004-loop-state-management.md
+    added: 2026-05-14
+
+  - contract: room_transition
+    status: active
+    pattern: signal
+    producer: room-manager
+    consumers:
+      - ui-manager
+      - npc-manager
+      - interaction-bus
+    adr: docs/architecture/adr-0007-room-location-management.md
+    signal_signature: "room_changed(room_id: StringName), room_transition_started(from: StringName, to: StringName), room_transition_completed(room_id: StringName)"
+    referenced_by:
+      - docs/architecture/adr-0004-loop-state-management.md
+      - docs/architecture/adr-0006-interaction-event-bus.md
+    added: 2026-05-14
+
+  - contract: npc_state_change
+    status: active
+    pattern: signal
+    producer: npc-manager
+    consumers:
+      - dialogue-system
+      - trust-system
+      - event-scheduler
+      - ui-manager
+      - save-manager
+    adr: docs/architecture/adr-0009-npc-state-machine.md
+    signal_signature: "npc_state_changed(npc_id: StringName, old_state: NPCEmotionalState, new_state: NPCEmotionalState), npc_dialogue_availability_changed(npc_id: StringName, available: bool), npc_interaction_requested(npc_id: StringName, event: Dictionary)"
+    referenced_by:
+      - docs/architecture/adr-0004-loop-state-management.md
+      - docs/architecture/adr-0010-save-load-persistence.md
+    added: 2026-05-14
+
+  - contract: trust_suspicion_change
+    status: active
+    pattern: signal
+    producer: trust-manager
+    consumers:
+      - dialogue-system
+      - event-scheduler
+      - ui-manager
+    adr: docs/architecture/adr-0012-npc-trust-suspicion.md
+    signal_signature: "trust_changed(npc_id: StringName, old_trust: float, new_trust: float), suspicion_changed(npc_id: StringName, old_susp: float, new_susp: float), trust_threshold_crossed(npc_id: StringName, threshold: float, direction: ThresholdDirection), suspicion_threshold_crossed(npc_id: StringName, threshold: float, direction: ThresholdDirection)"
+    referenced_by:
+      - docs/architecture/adr-0013-conditional-dialogue.md
+    added: 2026-05-14
+
+  - contract: night_transition_lifecycle
+    status: active
+    pattern: signal
+    producer: night-transition-controller
+    consumers:
+      - event-scheduler
+      - audio-system
+      - ui-manager
+    adr: docs/architecture/adr-0011-night-transition-controller.md
+    signal_signature: "night_transition_started(old_night: int), night_transition_completed(new_night: int), night_transition_failed(reason: String), game_ending_triggered(final_night: int)"
+    referenced_by:
+      - docs/architecture/adr-0008-countdown-timer.md
+    added: 2026-05-14
+
+  - contract: dialogue_flow
+    status: active
+    pattern: signal
+    producer: dialogue-manager
+    consumers:
+      - trust-manager
+      - npc-manager
+      - clue-database
+      - ui-manager
+      - save-manager
+    adr: docs/architecture/adr-0013-conditional-dialogue.md
+    signal_signature: "dialogue_started(npc_id: StringName), dialogue_ended(npc_id: StringName), dialogue_choice_made(npc_id: StringName, choice_id: StringName), dialogue_consequence_triggered(npc_id: StringName, consequence: DialogueConsequence)"
+    referenced_by:
+      - docs/architecture/adr-0012-npc-trust-suspicion.md
+      - docs/architecture/adr-0011-night-transition-controller.md
+    added: 2026-05-14
 #   - contract: damage_delivery
 #     status: active
 #     pattern: signal          # how the producer notifies consumers
@@ -100,7 +409,48 @@ interfaces: []
 # Register a budget when an ADR explicitly claims a frame time allocation.
 # The registry lets /architecture-review verify the total doesn't exceed the target.
 
-performance_budgets: []
+performance_budgets:
+  - target_fps: 60
+    total_frame_budget_ms: 16.6
+    platform: All
+    adr: docs/architecture/adr-0001-ink-wash-shader-pipeline.md
+    added: 2026-05-14
+
+  - system: ink_wash_shader
+    status: active
+    budget_ms: 1.5
+    adr: docs/architecture/adr-0001-ink-wash-shader-pipeline.md
+    notes: "FBM paper grain + color accumulation. Screen-space post-process on CanvasLayer 10."
+    referenced_by:
+      - docs/architecture/adr-0001-ink-wash-shader-pipeline.md
+    added: 2026-05-14
+
+  - system: rain_overlay
+    status: active
+    budget_ms: 1.5
+    adr: docs/architecture/adr-0001-ink-wash-shader-pipeline.md
+    notes: "3-layer procedural streaks + bottom mist. Screen-space on CanvasLayer 20."
+    referenced_by:
+      - docs/architecture/adr-0001-ink-wash-shader-pipeline.md
+    added: 2026-05-14
+
+  - system: hud_draw_calls
+    status: active
+    budget_ms: 5-8
+    adr: docs/architecture/adr-0003-ui-visual-register-system.md
+    notes: "HUD 5-8 draw calls; Dialogue 3-5; Notebook 8-12 (one page visible). Total UI ≤8 target."
+    referenced_by:
+      - docs/architecture/adr-0003-ui-visual-register-system.md
+    added: 2026-05-14
+
+  - system: timer_service
+    status: active
+    budget_ms: 0.01
+    adr: docs/architecture/adr-0008-countdown-timer.md
+    notes: "One Curve.sample() + float arithmetic per frame during active countdown. Inactive via set_process(false) — zero cost."
+    referenced_by:
+      - docs/architecture/adr-0001-ink-wash-shader-pipeline.md
+    added: 2026-05-14
 
 # Example:
 #
@@ -131,11 +481,108 @@ performance_budgets: []
 # Register an API decision when the choice is non-obvious and other ADRs might
 # make a different choice for the same purpose without knowing this was decided.
 
-api_decisions: []
+api_decisions:
+  - purpose: screen_space_post_processing
+    status: active
+    api: SCREEN_TEXTURE canvas_item shader
+    not: SubViewport, BackBufferCopy, per-sprite materials
+    adr: docs/architecture/adr-0001-ink-wash-shader-pipeline.md
+    reason: "Single post-process pass handles entire visual identity without per-asset setup. Prototype validated performance."
+    referenced_by:
+      - docs/architecture/adr-0002-knowledge-color-accumulation.md
+    added: 2026-05-14
 
-# Example:
-#
-# api_decisions:
+  - purpose: color_accumulation_source
+    status: active
+    api: Derived view from InsightGenerator + ClueDatabase
+    not: Independent accumulator, per-discovery events, fixed gates
+    adr: docs/architecture/adr-0002-knowledge-color-accumulation.md
+    reason: "Single source of truth prevents sync bugs. Cross-loop persistence automatic."
+    referenced_by:
+      - docs/architecture/adr-0005-clue-insight-unified-schema.md
+    added: 2026-05-14
+
+  - purpose: ui_rendering_layer
+    status: active
+    api: CanvasLayer 30+ (HUD), 40 (Dialogue), 50 (Notebook)
+    not: Rendering below CanvasLayer 10 (would be ink-washed)
+    adr: docs/architecture/adr-0003-ui-visual-register-system.md
+    reason: "UI elements must render above ink wash (layer 10) and rain (layer 20) to remain readable."
+    referenced_by:
+      - docs/architecture/adr-0001-ink-wash-shader-pipeline.md
+    added: 2026-05-14
+
+  - purpose: interaction_detection
+    status: active
+    api: Area2D.input_event signal + InteractionBus autoload
+    not: Physics raycast, InputMap actions, direct signal per interactable
+    adr: docs/architecture/adr-0006-interaction-event-bus.md
+    reason: "Area2D.input_event is the idiomatic Godot pattern for 2D click detection. Central bus provides unified logging and filtering."
+    referenced_by:
+      - docs/architecture/adr-0005-clue-insight-unified-schema.md
+    added: 2026-05-14
+
+  - purpose: knowledge_data_storage
+    status: active
+    api: In-memory Dictionary + JSON serialization
+    not: Godot Resource (.tres), separate tables, graph database
+    adr: docs/architecture/adr-0005-clue-insight-unified-schema.md
+    reason: "Mix of pre-authored and player-discovered data. Unified in-memory Dictionary simpler than Resource files for runtime data."
+    referenced_by:
+      - docs/architecture/adr-0002-knowledge-color-accumulation.md
+    added: 2026-05-14
+
+  - purpose: transition_fade_overlay
+    status: active
+    api: CanvasLayer 100 + ColorRect
+    not: SceneTree.change_scene, instant transition
+    adr: docs/architecture/adr-0007-room-location-management.md
+    reason: "Fade overlay must cover all game content and UI (layers 0-60). Layer 100 is above all established layers."
+    referenced_by:
+      - docs/architecture/adr-0003-ui-visual-register-system.md
+    added: 2026-05-14
+
+  - purpose: room_scene_loading
+    status: active
+    api: PackedScene.instantiate() + add_child/remove_child
+    not: SceneTree.change_scene_to_file(), all rooms preloaded, TileMap camera scrolling
+    adr: docs/architecture/adr-0007-room-location-management.md
+    reason: "Manual lifecycle control enables custom fade transitions and interactable registration. On-demand loading keeps memory low for mobile portability."
+    referenced_by:
+      - docs/architecture/adr-0004-loop-state-management.md
+      - docs/architecture/adr-0006-interaction-event-bus.md
+    added: 2026-05-14
+
+  - purpose: pressure_curve_calculation
+    status: active
+    api: Godot Curve Resource + Curve.sample()
+    not: Linear interpolation, Tween animation, AnimationPlayer
+    adr: docs/architecture/adr-0008-countdown-timer.md
+    reason: "Curve Resource provides designer-editable pressure curves in the editor inspector. Default linear; no code change needed for non-linear shapes."
+    referenced_by:
+      - docs/architecture/adr-0001-ink-wash-shader-pipeline.md
+    added: 2026-05-14
+
+  - purpose: save_file_format
+    status: active
+    api: JSON with schema versioning
+    not: Godot Resource .tres, binary format, per-system files
+    adr: docs/architecture/adr-0010-save-load-persistence.md
+    reason: "Human-readable for debugging. Schema migration via Dictionary transformation. Consistent with ADR-0005's JSON serialization decision."
+    referenced_by:
+      - docs/architecture/adr-0004-loop-state-management.md
+      - docs/architecture/adr-0005-clue-insight-unified-schema.md
+    added: 2026-05-14
+
+  - purpose: crash_safe_write
+    status: active
+    api: Atomic write (write-to-tmp + OS.rename) with backup rotation
+    not: Direct overwrite, write-ahead log
+    adr: docs/architecture/adr-0010-save-load-persistence.md
+    reason: "Atomic rename provides crash safety without WAL complexity. Backup rotation (.bak) provides fallback for corrupt primary. Auto-save debounce limits write frequency."
+    referenced_by:
+      - docs/architecture/adr-0004-loop-state-management.md
+    added: 2026-05-14
 #   - purpose: physics_raycast
 #     status: active
 #     api: PhysicsServer3D.space_get_direct_state()
@@ -157,7 +604,46 @@ api_decisions: []
 # Register a pattern when an ADR explicitly bans it AND other ADRs might
 # unknowingly use it (i.e., it's a tempting but wrong approach for this project).
 
-forbidden_patterns: []
+forbidden_patterns:
+  - pattern: hover_only_interaction
+    status: active
+    description: "No interaction may require hover as the only discovery mechanism.
+      All interactables must be discoverable via click/tap or passive visual cue."
+    why: "Mobile portability — touch has no hover. Art bible Section 7 requires passive discoverability."
+    adr: docs/architecture/adr-0003-ui-visual-register-system.md
+    added: 2026-05-14
+
+  - pattern: ui_below_canvas_layer_10
+    status: active
+    description: "No UI elements may render below CanvasLayer 10 (ink wash post-process).
+      All UI must be on CanvasLayer 30 or above."
+    why: "UI below CanvasLayer 10 would be ink-washed, making it unreadable."
+    adr: docs/architecture/adr-0001-ink-wash-shader-pipeline.md
+    added: 2026-05-14
+
+  - pattern: independent_color_accumulator
+    status: active
+    description: "Color accumulation must be derived from InsightGenerator and ClueDatabase,
+      not an independent counter."
+    why: "Independent accumulator creates data duplication and sync bugs. Single source of truth."
+    adr: docs/architecture/adr-0002-knowledge-color-accumulation.md
+    added: 2026-05-14
+
+  - pattern: interaction_bus_game_logic
+    status: active
+    description: "InteractionBus must contain only detection and dispatch logic.
+      No game logic (consequence, state change, reward) in the bus."
+    why: "Event bus must stay narrow. Game logic belongs in consumer systems."
+    adr: docs/architecture/adr-0006-interaction-event-bus.md
+    added: 2026-05-14
+
+  - pattern: non_atomic_night_advance
+    status: active
+    description: "Night advancement must use the atomic advance_night() operation.
+      Systems must not increment current_night directly."
+    why: "Partial state corruption during transition. Atomic operation guarantees consistent state."
+    adr: docs/architecture/adr-0004-loop-state-management.md
+    added: 2026-05-14
 
 # Example:
 #

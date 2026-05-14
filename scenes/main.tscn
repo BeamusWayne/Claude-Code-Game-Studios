@@ -1,0 +1,11 @@
+[gd_scene format=3 uid="uid://16d60x2v0a6s"]
+
+[ext_resource type="Script" path="res://src/rendering/ink_wash_driver.gd" id="1_inkwash"]
+
+[node name="Main" type="Node2D"]
+
+[node name="InkWashDriver" type="CanvasLayer" parent="."]
+script = ExtResource("1_inkwash")
+
+[node name="HUD" type="CanvasLayer" parent="."]
+layer = 30

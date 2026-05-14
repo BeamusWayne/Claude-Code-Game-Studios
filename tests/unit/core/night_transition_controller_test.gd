@@ -79,15 +79,31 @@ func before_test() -> void:
 	_controller.name = "NightTransitionControllerTest"
 	add_child(_controller)
 
-	# Wire up signal logging
+	# Wire up signal logging (named methods — no lambdas for GDUnit4 safety)
 	_started_events = []
 	_completed_events = []
 	_failed_events = []
 	_game_ending_events = []
-	_controller.night_transition_started.connect(func(n): _started_events.append(n))
-	_controller.night_transition_completed.connect(func(n): _completed_events.append(n))
-	_controller.night_transition_failed.connect(func(r): _failed_events.append(r))
-	_controller.game_ending_triggered.connect(func(n): _game_ending_events.append(n))
+	_controller.night_transition_started.connect(_on_started)
+	_controller.night_transition_completed.connect(_on_completed)
+	_controller.night_transition_failed.connect(_on_failed)
+	_controller.game_ending_triggered.connect(_on_game_ending)
+
+
+func _on_started(night: int) -> void:
+	_started_events.append(night)
+
+
+func _on_completed(night: int) -> void:
+	_completed_events.append(night)
+
+
+func _on_failed(reason: String) -> void:
+	_failed_events.append(reason)
+
+
+func _on_game_ending(night: int) -> void:
+	_game_ending_events.append(night)
 
 
 func after_test() -> void:

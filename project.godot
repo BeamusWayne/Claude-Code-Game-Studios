@@ -25,6 +25,10 @@ ClueDatabase="*res://src/core/clue_database.gd"
 RoomManager="*res://src/core/room_manager.gd"
 NPCManager="*res://src/core/npc_manager.gd"
 NightTransitionController="*res://src/core/night_transition_controller.gd"
+ClueDiscoveryManager="*res://src/feature/clue_discovery_manager.gd"
+ColorAccumulationManager="*res://src/feature/color_accumulation_manager.gd"
+EventScheduler="*res://src/feature/event_scheduler.gd"
+TrustSuspicionManager="*res://src/feature/trust_suspicion_manager.gd"
 
 [display]
 

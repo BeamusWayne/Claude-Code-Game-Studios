@@ -17,22 +17,22 @@
 
 | # | System Name | Category | Priority | Status | Design Doc | Depends On |
 |---|-------------|----------|----------|--------|------------|------------|
-| 1 | 循环状态管理 (Loop State Management) | Core | MVP | GDD Complete | design/gdd/loop-state-management.md | — |
-| 2 | 线索数据库 (Clue Database) | Core | MVP | GDD Complete | design/gdd/clue-database.md | — |
-| 3 | 房间/位置管理 (Room/Location Management) | Core | MVP | GDD Complete | design/gdd/room-location-management.md | — |
-| 4 | 存档/读档持久化 (Save/Load Persistence) | Persistence | MVP | Not Started | — | — |
-| 5 | 倒计时系统 (Countdown Timer) | Gameplay | MVP | GDD Complete | design/gdd/countdown-timer.md | #1 |
-| 6 | NPC 状态机 (NPC State Machine) | Gameplay | MVP | GDD Complete | design/gdd/npc-state-machine.md | #1 |
-| 7 | 交互系统 (Interaction System) | Core | MVP | GDD Complete | design/gdd/interaction-system.md | #3 |
-| 8 | 夜晚过渡控制器 (Night Transition Controller) | Core | MVP | GDD Complete | design/gdd/night-transition-controller.md | #1, #4 |
-| 9 | 事件调度器 (Event Scheduler) | Gameplay | MVP | Not Started | — | #5, #3, #6 |
-| 10 | 线索发现 (Clue Discovery) | Gameplay | MVP | Not Started | — | #7, #2 |
-| 11 | 线索连接/推理 (Clue Connection/Deduction) | Gameplay | MVP | Not Started | — | #2, #10 |
-| 12 | 洞察生成 (Insight Generation) | Gameplay | MVP | Not Started | — | #11, #2 |
-| 13 | NPC 信任/怀疑 (NPC Trust/Suspicion) | Gameplay | MVP | Not Started | — | #6, #7 |
+| 1 | 循环状态管理 (Loop State Management) | Core | MVP | Implemented | design/gdd/loop-state-management.md | — |
+| 2 | 线索数据库 (Clue Database) | Core | MVP | Implemented | design/gdd/clue-database.md | — |
+| 3 | 房间/位置管理 (Room/Location Management) | Core | MVP | Implemented | design/gdd/room-location-management.md | — |
+| 4 | 存档/读档持久化 (Save/Load Persistence) | Persistence | MVP | Implemented | — | — |
+| 5 | 倒计时系统 (Countdown Timer) | Gameplay | MVP | Implemented | design/gdd/countdown-timer.md | #1 |
+| 6 | NPC 状态机 (NPC State Machine) | Gameplay | MVP | Implemented | design/gdd/npc-state-machine.md | #1 |
+| 7 | 交互系统 (Interaction System) | Core | MVP | Implemented | design/gdd/interaction-system.md | #3 |
+| 8 | 夜晚过渡控制器 (Night Transition Controller) | Core | MVP | Implemented | design/gdd/night-transition-controller.md | #1, #4 |
+| 9 | 事件调度器 (Event Scheduler) | Gameplay | MVP | Implemented | design/gdd/event-scheduler.md | #5, #3, #6 |
+| 10 | 线索发现 (Clue Discovery) | Gameplay | MVP | Implemented | design/gdd/clue-discovery.md | #7, #2 |
+| 11 | 线索连接/推理 (Clue Connection/Deduction) | Gameplay | MVP | GDD Complete | design/gdd/clue-connection-deduction.md | #2, #10 |
+| 12 | 洞察生成 (Insight Generation) | Gameplay | MVP | GDD Complete | design/gdd/insight-generation.md | #11, #2 |
+| 13 | NPC 信任/怀疑 (NPC Trust/Suspicion) | Gameplay | MVP | Implemented | design/gdd/npc-trust-suspicion.md | #6, #7 |
 | 14 | 条件性对话树 (Conditional Dialogue Trees) | Narrative | MVP | Not Started | — | #6, #13 |
 | 15 | 住客审问 (Guest Interrogation) | Gameplay | MVP | Not Started | — | #14, #13, #7 |
-| 16 | 色彩积累 (Color Accumulation) | Core | MVP | Not Started | — | #12, #1 |
+| 16 | 色彩积累 (Color Accumulation) | Core | MVP | Implemented | design/gdd/color-accumulation.md | #12, #1 |
 | 17 | 笔记本系统 (Notebook System) | Gameplay | MVP | Not Started | — | #2, #11, #12 |
 | 18 | 水墨视觉风格 (Ink Wash Visual Style) | UI | MVP | Not Started | — | #16 |
 | 19 | 计时器/HUD UI (Timer/HUD UI) | UI | MVP | Not Started | — | #5, #16 |
@@ -229,10 +229,12 @@
 | Metric | Count |
 |--------|-------|
 | Total systems identified | 24 + 1 integration scenario |
-| Design docs started | 7 |
+| Systems implemented | 12 (Foundation + Core + Feature layers) |
+| Design docs started | 14 |
 | Design docs reviewed | 1 |
 | Design docs approved | 0 |
-| MVP systems designed | 7 / 23 |
+| MVP systems designed | 12 / 23 |
+| MVP systems implemented | 12 / 23 |
 | Vertical Slice systems designed | 0 / 2 |
 
 ---
